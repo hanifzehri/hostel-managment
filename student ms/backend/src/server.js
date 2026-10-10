@@ -57,16 +57,30 @@ app.use((req, res, next) => {
 });
 
 // Middleware
-const configuredOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173').split(',').map((value) => value.trim()).filter(Boolean);
-const allowedOrigins = process.env.NODE_ENV === 'production'
-  ? configuredOrigins
-  : [...new Set([...configuredOrigins, 'http://localhost:5173', 'http://127.0.0.1:5173'])];
+const defaultOrigins = [
+  'https://hostel-managment-khuzdar.vercel.app',
+  'https://backend-d1ht.onrender.com',
+  'http://localhost:5173',
+  'http://localhost:5000',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5000',
+];
+const configuredOrigins = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((value) => value.trim())
+  .filter(Boolean);
+const allowedOrigins = new Set([...defaultOrigins, ...configuredOrigins]);
+
 app.use(cors({
   origin(origin, callback) {
     // Allow server-to-server and local tooling requests without an Origin header.
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.has(origin)) return callback(null, true);
+    if (origin.endsWith('.vercel.app')) return callback(null, true);
+    if (process.env.NODE_ENV !== 'production') return callback(null, true);
     return callback(new Error('Origin is not allowed by CORS policy'));
   },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));

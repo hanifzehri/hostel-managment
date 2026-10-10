@@ -1,7 +1,24 @@
 import axios from 'axios';
 
+// Dynamic API URL: points to live Render backend in production/Vercel, or local proxy in development
+export const getBaseUrl = () => {
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  // When running on Vercel (hostel-managment-khuzdar.vercel.app) or any remote domain, target the live Render backend
+  if (
+    typeof window !== 'undefined' &&
+    !window.location.hostname.includes('localhost') &&
+    !window.location.hostname.includes('127.0.0.1')
+  ) {
+    return 'https://backend-d1ht.onrender.com/api';
+  }
+  // Local development fallback
+  return '/api';
+};
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
