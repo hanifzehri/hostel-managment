@@ -6,6 +6,7 @@ import { useHostel } from '../../context/HostelContext';
 import api from '../../api/client';
 import { usePWA } from '../../context/PWAContext';
 import HostelLogo from '../ui/HostelLogo';
+import { CircularHostelLogo } from './Sidebar';
 import {
   Menu,
   Moon,
@@ -218,54 +219,50 @@ const Navbar = ({ setIsMobileOpen }) => {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center justify-between h-16 px-4 lg:px-8 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 transition-colors">
-        {/* Left Side: Mobile toggle + Quick Search Button */}
-        <div className="flex items-center space-x-3">
+      <header className="sticky top-0 z-30 flex items-center justify-between h-18 px-4 lg:px-8 bg-white border-b border-slate-200/90 shadow-2xs transition-colors">
+        {/* Left Side: Circular Logo + Hamburger + Welcome greeting matching Reference Image 2 */}
+        <div className="flex items-center space-x-3.5">
+          <div className="lg:hidden">
+            <CircularHostelLogo className="w-9 h-9" />
+          </div>
+
           <button
-            onClick={() => setIsMobileOpen(true)}
-            aria-label="Open navigation menu"
-            className="lg:hidden p-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-colors"
+            onClick={() => setIsMobileOpen((prev) => !prev)}
+            aria-label="Toggle navigation menu"
+            className="p-2 rounded-xl bg-[#EDE9FE] text-[#6D28D9] hover:bg-[#DDD6FE] transition-colors"
           >
             <Menu className="w-5 h-5" />
           </button>
+
+          <div className="hidden sm:block">
+            <h2 className="text-base sm:text-lg font-extrabold text-[#2563EB] tracking-tight leading-tight">
+              Welcome to {settings.hostelName || 'Royal Hostel Khuzdar'} !
+            </h2>
+          </div>
+        </div>
+
+        {/* Right Side: Current Date + Circular Profile & Settings Badges matching Reference Image 2 */}
+        <div className="flex items-center space-x-3 sm:space-x-4">
+          <div className="hidden md:flex items-center text-xs sm:text-sm font-bold text-slate-800">
+            {(() => {
+              const now = new Date();
+              const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
+              const day = String(now.getDate()).padStart(2, '0');
+              const month = String(now.getMonth() + 1).padStart(2, '0');
+              const year = now.getFullYear();
+              return `Today is ${dayName}, ${day}/${month}/${year}`;
+            })()}
+          </div>
 
           {/* Quick search input trigger */}
           <button
             type="button"
             onClick={() => setSearchModalOpen(true)}
-            className="hidden sm:flex items-center space-x-2.5 w-64 md:w-84 px-3.5 py-2 text-xs font-medium text-slate-400 bg-slate-100 dark:bg-slate-800/80 rounded-xl hover:bg-slate-200/70 dark:hover:bg-slate-700/60 border border-slate-200/60 dark:border-slate-700/60 transition-all group shadow-2xs hover:border-blue-500/40"
+            title="Search records (Ctrl+K)"
+            className="p-2 rounded-full bg-slate-100 text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition-colors"
           >
-            <Search className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors shrink-0" />
-            <span className="flex-1 text-left truncate">Search students, rooms, staff, fees...</span>
-            <span className="hidden md:inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-md border border-slate-200 dark:border-slate-700 shadow-2xs">
-              Ctrl K
-            </span>
+            <Search className="w-4 h-4" />
           </button>
-        </div>
-
-        {/* Right Side: Theme toggle + Notifications + User Profile */}
-        <div className="flex items-center space-x-2 sm:space-x-3">
-          {/* Mobile search icon */}
-          <button
-            onClick={() => setSearchModalOpen(true)}
-            aria-label="Open search dialog"
-            className="sm:hidden p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
-          >
-            <Search className="w-5 h-5" />
-          </button>
-
-          {/* Windows PWA Desktop Install Button */}
-          {!isInstalled && (
-            <button
-              onClick={handleInstallClick}
-              title="Install Royal Hostel Management System as a native Windows App"
-              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-400 border border-blue-500/30 text-xs font-bold transition-all shadow-2xs hover:scale-105 active:scale-95"
-            >
-              <MonitorDown className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="hidden md:inline">Install Windows App</span>
-              <span className="md:hidden">Install</span>
-            </button>
-          )}
 
           {/* Theme switcher */}
           <button
