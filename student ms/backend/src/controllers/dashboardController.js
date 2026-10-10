@@ -331,4 +331,93 @@ const getDashboardStats = async (req, res, next) => {
   }
 };
 
-module.exports = { getDashboardStats };
+// @desc    Global Unified Search across Students, Rooms, Staff, and Fees
+// @route   GET /api/dashboard/search
+// @access  Private
+const getGlobalSearch = async (req, res, next) => {
+  try {
+    const q = (req.query.q || req.query.query || req.query.search || '').trim();
+    if (!q) {
+      return res.status(200).json({
+        success: true,
+        query: '',
+        total: 0,
+        results: { students: [], rooms: [], staff: [], fees: [] },
+      });
+    }
+
+    const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+
+    const [students, rooms, staff, fees] = await Promise.all([
+      Student.find({
+        $or: [
+          { fullName: regex },
+          { studentId: regex },
+          { cnic: regex },
+          { phone: regex },
+          { institution: regex },
+          { rollNumber: regex },
+        ],
+      })
+        .populate('room', 'roomNumber block')
+        .select('fullName studentId cnic phone institution studentStatus room profilePhoto profilePicture')
+        .limit(6)
+        .lean(),
+
+      Room.find({
+        $or: [
+          { roomNumber: regex },
+          { block: regex },
+          { roomType: regex },
+        ],
+      })
+        .select('roomNumber block floor roomType capacity currentOccupants status monthlyFee')
+        .limit(6)
+        .lean(),
+
+      Staff.find({
+        $or: [
+          { name: regex },
+          { staffId: regex },
+          { cnic: regex },
+          { phone: regex },
+          { designation: regex },
+          { role: regex },
+        ],
+      })
+        .select('name staffId designation role phone status salary')
+        .limit(6)
+        .lean(),
+
+      Fee.find({
+        $or: [
+          { invoiceNumber: regex },
+          { month: regex },
+        ],
+      })
+        .populate('student', 'fullName studentId')
+        .select('invoiceNumber month year amount total paidAmount remainingAmount status dueDate')
+        .limit(6)
+        .lean(),
+    ]);
+
+    const total = students.length + rooms.length + staff.length + fees.length;
+
+    res.status(200).json({
+      success: true,
+      query: q,
+      total,
+      results: {
+        students,
+        rooms,
+        staff,
+        fees,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getDashboardStats, getGlobalSearch };
+

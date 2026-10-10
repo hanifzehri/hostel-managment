@@ -48,9 +48,8 @@ import {
 } from 'recharts';
 
 const COLORS = [
-  '#0d9488', '#0284c7', '#10b981', '#f59e0b', '#8b5cf6',
-  '#06b6d4', '#ec4899', '#3b82f6', '#14b8a6', '#f97316',
-  '#64748b', '#84cc16',
+  '#0d9488', '#0f172a', '#64748b', '#0f766e', '#334155',
+  '#14b8a6', '#475569', '#115e59', '#1e293b', '#94a3b8',
 ];
 
 const Dashboard = () => {
@@ -87,11 +86,11 @@ const Dashboard = () => {
   const isLoss = finance.isLoss;
   const announcements = data?.activeAnnouncements || [];
 
-  // Fee collection pie data
+  // Fee collection pie data strictly using the 4-color system
   const feeStatusData = [
-    { name: 'Paid Full', value: stats.students?.paying || 14, color: '#10b981' },
-    { name: 'Partial', value: stats.students?.partial || 3, color: '#f59e0b' },
-    { name: 'Unpaid / Pending', value: stats.students?.unpaid || 3, color: '#ef4444' },
+    { name: 'Paid Full', value: stats.students?.paying || 14, color: '#0d9488' },
+    { name: 'Partial', value: stats.students?.partial || 3, color: '#64748b' },
+    { name: 'Unpaid / Pending', value: stats.students?.unpaid || 3, color: '#0f172a' },
   ].filter((item) => item.value > 0);
 
   // Expense chart data
@@ -100,21 +99,21 @@ const Dashboard = () => {
   return (
     <div className="space-y-8 pb-12">
       {/* Welcome & Branding Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-950 via-slate-900 to-black p-6 sm:p-8 text-white shadow-2xl border border-amber-500/30">
+      <div className="relative overflow-hidden rounded-3xl bg-slate-900 dark:bg-slate-900 p-6 sm:p-8 text-white shadow-xl border border-slate-800">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3">
             {/* Emblem & Hostel Identity */}
             <HostelLogo size="lg" variant="light" subtitle="Premier Resident Living • Khuzdar, Balochistan" />
 
             <div>
-              <h1 className="text-xl sm:text-2xl font-black tracking-tight mt-2">
+              <h1 className="text-xl sm:text-2xl font-black tracking-tight mt-2 text-white">
                 Executive Operations Dashboard
               </h1>
               <p className="mt-1 text-xs sm:text-sm text-slate-300 max-w-xl">
-                Logged in as <strong className="text-amber-300">{user?.name || 'Administrator'}</strong>. Currently monitoring{' '}
+                Logged in as <strong className="text-teal-300">{user?.name || 'Administrator'}</strong>. Currently monitoring{' '}
                 <strong className="text-white">{stats.students?.total || 20} students</strong> and{' '}
                 <strong className="text-white">{stats.staff?.total || 10} hostel workers</strong> at{' '}
-                <strong className="text-amber-400">{stats.beds?.occupancyRate || 77}% occupancy</strong>.
+                <strong className="text-teal-400">{stats.beds?.occupancyRate || 77}% occupancy</strong>.
               </p>
             </div>
           </div>
@@ -126,43 +125,42 @@ const Dashboard = () => {
               variant="primary"
               size="sm"
               icon={Users}
-              className="bg-teal-500 text-slate-950 hover:bg-teal-400 font-extrabold shadow-md border-none"
             >
               {stats.students?.total || 20} Students
             </Button>
             <Button
               onClick={() => navigate('/id-cards')}
-              variant="secondary"
+              variant="outline"
               size="sm"
               icon={IdCard}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+              className="text-white border-slate-700 hover:bg-slate-800"
             >
               ID Cards
             </Button>
             <Button
               onClick={() => navigate('/salaries')}
-              variant="secondary"
+              variant="outline"
               size="sm"
               icon={Banknote}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+              className="text-white border-slate-700 hover:bg-slate-800"
             >
               Staff Salaries
             </Button>
             <Button
               onClick={() => navigate('/expenses')}
-              variant="secondary"
+              variant="outline"
               size="sm"
               icon={Receipt}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+              className="text-white border-slate-700 hover:bg-slate-800"
             >
               Expenses
             </Button>
             <Button
               onClick={() => navigate('/financial-report')}
-              variant="secondary"
+              variant="outline"
               size="sm"
               icon={TrendingUp}
-              className="bg-white/10 hover:bg-white/20 text-white border-white/20"
+              className="text-white border-slate-700 hover:bg-slate-800"
             >
               Profit & Loss
             </Button>
@@ -170,15 +168,15 @@ const Dashboard = () => {
         </div>
 
         {/* Ambient Decorative Accents */}
-        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
       </div>
 
       {/* Announcements Notice if any */}
       {announcements.length > 0 && (
-        <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/60 flex items-start space-x-3.5">
-          <AlertCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+        <div className="p-4 rounded-2xl bg-teal-50/60 dark:bg-slate-900 border border-teal-200/60 dark:border-slate-800 flex items-start space-x-3.5">
+          <AlertCircle className="w-5 h-5 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
           <div className="flex-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">
               Hostel Notice: {announcements[0].title}
             </span>
             <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed">
@@ -187,7 +185,7 @@ const Dashboard = () => {
           </div>
           <Link
             to="/announcements"
-            className="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline shrink-0"
+            className="text-xs font-bold text-teal-700 dark:text-teal-300 hover:underline shrink-0"
           >
             All Notices
           </Link>
@@ -220,7 +218,7 @@ const Dashboard = () => {
             value={stats.rooms?.total || 10}
             subtext="Across Block A, B & C"
             icon={DoorOpen}
-            color="sky"
+            color="navy"
             onClick={() => navigate('/rooms')}
           />
 
@@ -230,7 +228,7 @@ const Dashboard = () => {
             value={(stats.rooms?.total || 10) - (stats.rooms?.available || 0)}
             subtext={`${stats.rooms?.full || 0} Full • ${stats.rooms?.partiallyOccupied || 0} Partial`}
             icon={Building}
-            color="purple"
+            color="slate"
             onClick={() => navigate('/rooms')}
           />
 
@@ -240,7 +238,7 @@ const Dashboard = () => {
             value={stats.beds?.vacant || 6}
             subtext={`${stats.beds?.occupied || 20} Beds occupied (${stats.beds?.occupancyRate || 77}%)`}
             icon={BedDouble}
-            color="emerald"
+            color="teal"
             onClick={() => navigate('/rooms')}
           />
 
@@ -250,7 +248,7 @@ const Dashboard = () => {
             value={`PKR ${(finance.monthlyRevenue || 155000).toLocaleString()}`}
             subtext="Collected student fees this month"
             icon={DollarSign}
-            color="emerald"
+            color="teal"
             onClick={() => navigate('/fees')}
           />
 
@@ -260,28 +258,24 @@ const Dashboard = () => {
             value={`PKR ${(finance.monthlyExpenses || 0).toLocaleString()}`}
             subtext="Salaries, mess, utilities & repairs"
             icon={Receipt}
-            color="rose"
+            color="navy"
             onClick={() => navigate('/expenses')}
           />
 
           {/* 7. Monthly Profit / Loss */}
           <div
             onClick={() => navigate('/financial-report')}
-            className={`p-6 rounded-2xl border shadow-sm transition-all cursor-pointer ${
-              isLoss
-                ? 'bg-rose-50/40 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50'
-                : 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50'
-            }`}
+            className="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all cursor-pointer hover:-translate-y-1 hover:border-teal-500/40"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 Monthly {isLoss ? 'Loss' : 'Profit'}
               </span>
               <div
-                className={`p-2 rounded-xl ${
+                className={`p-2 rounded-xl border ${
                   isLoss
-                    ? 'bg-rose-100 dark:bg-rose-900/60 text-rose-600'
-                    : 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600'
+                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+                    : 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 border-teal-200/60 dark:border-teal-800/60'
                 }`}
               >
                 {isLoss ? <TrendingDown className="w-5 h-5" /> : <TrendingUp className="w-5 h-5" />}
@@ -290,7 +284,7 @@ const Dashboard = () => {
             <div className="mt-3">
               <p
                 className={`text-2xl font-black ${
-                  isLoss ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'
+                  isLoss ? 'text-slate-900 dark:text-white' : 'text-teal-600 dark:text-teal-400'
                 }`}
               >
                 {isLoss ? '-' : '+'}PKR {(finance.monthlyProfit || 0).toLocaleString()}
@@ -298,12 +292,12 @@ const Dashboard = () => {
               <div className="flex items-center space-x-1.5 mt-1">
                 <span
                   className={`text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded ${
-                    isLoss ? 'bg-rose-600 text-white' : 'bg-emerald-600 text-white'
+                    isLoss ? 'bg-slate-900 text-white dark:bg-slate-800' : 'bg-teal-600 text-white'
                   }`}
                 >
                   {isLoss ? 'DEFICIT / LOSS' : 'PROFIT'}
                 </span>
-                <span className="text-[11px] text-slate-500 font-medium">
+                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
                   {finance.profitMargin}% margin
                 </span>
               </div>
@@ -316,7 +310,7 @@ const Dashboard = () => {
             value={`PKR ${(finance.pendingStudentFees || 45000).toLocaleString()}`}
             subtext="Uncollected student dues this month"
             icon={Clock}
-            color="amber"
+            color="slate"
             onClick={() => navigate('/fees')}
           />
 
@@ -326,7 +320,7 @@ const Dashboard = () => {
             value={stats.staff?.total || 10}
             subtext="10 distinct workers on campus"
             icon={Users}
-            color="sky"
+            color="teal"
             onClick={() => navigate('/staff')}
           />
 
@@ -336,7 +330,7 @@ const Dashboard = () => {
             value={`PKR ${(stats.staff?.monthlySalaryExpense || 342000).toLocaleString()}`}
             subtext="Dynamic sum of 10 worker salaries"
             icon={Banknote}
-            color="indigo"
+            color="navy"
             onClick={() => navigate('/salaries')}
           />
         </div>
@@ -357,7 +351,7 @@ const Dashboard = () => {
             </div>
             <Link
               to="/financial-report"
-              className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center"
+              className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline flex items-center"
             >
               Statement <ArrowUpRight className="w-3.5 h-3.5 ml-1" />
             </Link>
@@ -382,8 +376,8 @@ const Dashboard = () => {
                   }}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="revenue" name="Collected Revenue" fill="#10b981" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="expenses" name="Hostel Expenses" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" name="Collected Revenue" fill="#0d9488" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expenses" name="Hostel Expenses" fill="#64748b" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -402,7 +396,7 @@ const Dashboard = () => {
             </div>
             <Link
               to="/expenses"
-              className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline"
+              className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline"
             >
               Ledger
             </Link>
@@ -426,7 +420,7 @@ const Dashboard = () => {
                     fontSize: '12px',
                   }}
                 />
-                <Bar dataKey="value" name="Amount" fill="#6366f1" radius={[0, 4, 4, 0]}>
+                <Bar dataKey="value" name="Amount" fill="#0d9488" radius={[0, 4, 4, 0]}>
                   {expenseData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
@@ -450,7 +444,7 @@ const Dashboard = () => {
                 Paid in Full vs Partial vs Pending Dues
               </p>
             </div>
-            <Link to="/fees" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link to="/fees" className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline">
               Manage Fees
             </Link>
           </div>
@@ -492,7 +486,7 @@ const Dashboard = () => {
                 Occupants vs Total Bed Capacity
               </p>
             </div>
-            <Link to="/rooms" className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+            <Link to="/rooms" className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline">
               Rooms Hub
             </Link>
           </div>
@@ -506,7 +500,7 @@ const Dashboard = () => {
                   contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '12px' }}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="totalOccupants" name="Occupants" fill="#6366f1" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="totalOccupants" name="Occupants" fill="#0d9488" radius={[4, 4, 0, 0]} />
                 <Bar dataKey="totalCapacity" name="Capacity" fill="#94a3b8" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>

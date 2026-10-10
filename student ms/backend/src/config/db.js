@@ -1,26 +1,60 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
 
 let mongodInstance = null;
 
+// Configure reliable DNS servers for SRV resolution when using Atlas (prevents querySrv ECONNREFUSED on local/restricted ISPs)
+const setupDnsServers = () => {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1', '8.8.4.4']);
+  } catch (err) {
+    console.warn(`[DB] Warning: Could not override DNS servers: ${err.message}`);
+  }
+};
+
 const connectDB = async () => {
   const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/hostel_db';
+  const isSrv = uri.startsWith('mongodb+srv://');
   
+  if (isSrv) {
+    setupDnsServers();
+  }
+
+  const connectOptions = {
+    serverSelectionTimeoutMS: 5000,
+    connectTimeoutMS: 10000,
+  };
+
   try {
-    console.log(`[DB] Attempting connection to configured MongoDB (${uri})...`);
-    await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 3000,
-    });
-    console.log(`[DB] ✅ MongoDB connected successfully to ${mongoose.connection.host}:${mongoose.connection.port}/${mongoose.connection.name}`);
-  } catch (err) {
-    console.error(`[DB] ❌ Could not connect to configured MongoDB (${uri}): ${err.message}`);
+    const maskedUri = uri.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@');
+    console.log(`[DB] 🔌 Attempting connection to persistent MongoDB (${maskedUri})...`);
     
-    // Explicit environment flag check - never silent!
-    if (process.env.ALLOW_IN_MEMORY_DB === 'true' && process.env.NODE_ENV !== 'production') {
+    await mongoose.connect(uri, connectOptions);
+    console.log(`[DB] ✅ MongoDB connected successfully to ${mongoose.connection.host}/${mongoose.connection.name}`);
+  } catch (err) {
+    const isDnsError = err.message && (err.message.includes('querySrv') || err.message.includes('ECONNREFUSED'));
+    
+    if (isDnsError && isSrv) {
+      console.warn(`[DB] ⚠️ DNS SRV query failed (${err.message}). Retrying with explicit Google & Cloudflare DNS...`);
+      try {
+        setupDnsServers();
+        await mongoose.connect(uri, connectOptions);
+        console.log(`[DB] ✅ MongoDB connected successfully on DNS retry to ${mongoose.connection.host}/${mongoose.connection.name}`);
+        return;
+      } catch (retryErr) {
+        console.error(`[DB] ❌ Secondary Atlas connection attempt failed: ${retryErr.message}`);
+      }
+    }
+
+    const isProduction = process.env.NODE_ENV === 'production';
+    const allowInMemory = process.env.ALLOW_IN_MEMORY_DB === 'true';
+
+    // Strictly forbid in-memory database in production
+    if (!isProduction && allowInMemory) {
       console.warn('[DB] =========================================================================');
-      console.warn('[DB] ⚠️ EXPLICIT OVERRIDE: ALLOW_IN_MEMORY_DB is set to "true".');
-      console.warn('[DB] Starting temporary in-memory MongoDB instance for local testing.');
+      console.warn('[DB] ⚠️ EXPLICIT OVERRIDE: ALLOW_IN_MEMORY_DB is set to "true" in non-production.');
+      console.warn('[DB] Starting temporary in-memory MongoDB instance for local testing/development.');
       console.warn('[DB] ⚠️ CAUTION: Records created in this session are EPHEMERAL and NOT persistent!');
-      console.warn('[DB] To persist records: start MongoDB service or set MONGODB_URI in backend/.env');
       console.warn('[DB] =========================================================================');
       
       try {
@@ -36,15 +70,19 @@ const connectDB = async () => {
     } else {
       console.error('[DB] =========================================================================');
       console.error('[DB] 🛑 FATAL: Persistent MongoDB is unavailable and in-memory fallback is disabled.');
-      console.error('[DB] 📋 REQUIRED CONFIGURATION:');
-      console.error('[DB]   1. Ensure MongoDB service is running locally on 127.0.0.1:27017');
-      console.error('[DB]      (e.g., net start MongoDB or mongod --dbpath <data_dir>)');
-      console.error('[DB]   2. OR configure MongoDB Atlas URI in backend/.env:');
-      console.error('[DB]      MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/hostel_db');
-      console.error('[DB]   3. OR if running local tests without installed MongoDB, explicitly enable:');
-      console.error('[DB]      ALLOW_IN_MEMORY_DB=true in backend/.env');
+      console.error(`[DB] Error: ${err.message}`);
+      console.error('[DB] 📋 TROUBLESHOOTING & RESOLUTION STEPS:');
+      console.error('[DB]   1. For MongoDB Atlas (mongodb+srv://...):');
+      console.error('[DB]      - Ensure Network Access / IP Whitelist includes 0.0.0.0/0 (or your server IP).');
+      console.error('[DB]      - Verify database username and password in MONGODB_URI.');
+      console.error('[DB]      - If your ISP blocks SRV records, switch to the standard 3-shard seed list URI:');
+      console.error('[DB]        mongodb://<user>:<password>@host1:27017,host2:27017,host3:27017/hostel_db?ssl=true&replicaSet=...&authSource=admin');
+      console.error('[DB]   2. For Local MongoDB:');
+      console.error('[DB]      - Ensure MongoDB service is running (net start MongoDB or mongod).');
+      console.error('[DB]   3. For CI/Testing without MongoDB:');
+      console.error('[DB]      - Set ALLOW_IN_MEMORY_DB=true ONLY when NODE_ENV is NOT production.');
       console.error('[DB] =========================================================================');
-      throw new Error(`MongoDB connection failed (${uri}): ${err.message}. Configure MONGODB_URI or start MongoDB service.`);
+      throw new Error(`Persistent database connection failed: ${err.message}.`);
     }
   }
 };
@@ -57,3 +95,4 @@ const disconnectDB = async () => {
 };
 
 module.exports = { connectDB, disconnectDB };
+

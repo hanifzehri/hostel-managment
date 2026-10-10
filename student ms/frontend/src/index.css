@@ -8,10 +8,18 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* ============================================================
+     THE 4-COLOR PROFESSIONAL ENTERPRISE DESIGN PALETTE
+     Color 1: Foundation Dark / Slate-900 (#0f172a)
+     Color 2: Canvas Light / Surface White (#ffffff & #f8fafc)
+     Color 3: Signature Accent Teal (#0d9488)
+     Color 4: Balanced Slate Neutral (#64748b & #e2e8f0)
+     ============================================================ */
   --brand: #0d9488;
   --brand-dark: #0f766e;
   --brand-light: #ccfbf1;
-  --navy: #0b192c;
+  --navy: #0f172a;
   --navy-surface: #1e293b;
   --ink: #0f172a;
   --muted: #64748b;
@@ -283,3 +291,53 @@ input:focus, select:focus, textarea:focus {
     page-break-inside: avoid;
   }
 }
+
+/* ============================================================
+   GLOBAL 4-COLOR HARMONIZATION
+   Strictly maps auxiliary accent classes into the 4 colors:
+   - Color 1 (Ink Dark): #0f172a (Deep Slate)
+   - Color 2 (Canvas Light): #ffffff / #f8fafc (Clean Surface)
+   - Color 3 (Royal Accent): #0d9488 (Signature Teal)
+   - Color 4 (Neutral Slate): #64748b / #e2e8f0 (Balanced Slate)
+   ============================================================ */
+
+/* Primary brand button and focus accents */
+.bg-teal-600 {
+  background-color: #0d9488 !important;
+}
+.hover\:bg-teal-700:hover {
+  background-color: #0f766e !important;
+}
+.text-teal-600 {
+  color: #0d9488 !important;
+}
+
+/* Map auxiliary/legacy accent text to Teal or Slate */
+.text-indigo-600, .text-blue-600, .text-sky-600, .text-purple-600, .text-cyan-600 {
+  color: #0d9488 !important;
+}
+.dark .text-indigo-400, .dark .text-blue-400, .dark .text-sky-400, .dark .text-purple-400, .dark .text-cyan-400 {
+  color: #14b8a6 !important;
+}
+
+/* Map auxiliary button/badge backgrounds to Teal */
+.bg-indigo-600, .bg-blue-600, .bg-sky-600, .bg-purple-600, .bg-cyan-600 {
+  background-color: #0d9488 !important;
+}
+
+/* Map auxiliary light background tints to Slate-100 or Slate-800 */
+.bg-indigo-50, .bg-blue-50, .bg-sky-50, .bg-purple-50 {
+  background-color: #f1f5f9 !important;
+}
+.dark .bg-indigo-950, .dark .bg-blue-950, .dark .bg-sky-950, .dark .bg-purple-950 {
+  background-color: #1e293b !important;
+}
+
+/* Muted borders */
+.border-indigo-200, .border-blue-200, .border-sky-200, .border-purple-200 {
+  border-color: #e2e8f0 !important;
+}
+.dark .border-indigo-800, .dark .border-blue-800, .dark .border-sky-800, .dark .border-purple-800 {
+  border-color: #334155 !important;
+}
+

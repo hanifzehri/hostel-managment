@@ -5,21 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Royal Hostel Khuzdar | Professional Hostel Management System</title>
     
-    <!-- PWA Icons & Manifest -->
+    <!-- PWA Icons & Canonical Manifest -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Early PWA Install Prompt Capture: Prevents missed events before React mount -->
+    <script>
+      window.__deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', function (e) {
+        e.preventDefault();
+        window.__deferredPrompt = e;
+        window.dispatchEvent(new CustomEvent('pwa-deferred-prompt-ready', { detail: e }));
+        console.log('[PWA] Early install prompt captured in HTML head.');
+      });
+    </script>
 
     <!-- PWA & Windows 10/11 Meta Tags -->
-    <meta name="theme-color" content="#0d9488" />
-    <meta name="background-color" content="#070e17" />
+    <meta name="theme-color" content="#0B192C" />
+    <meta name="background-color" content="#0B192C" />
     <meta name="description" content="Secure Enterprise Hostel Management & Operations Platform for Windows & Mobile" />
     <meta name="application-name" content="Royal Hostel" />
     <meta name="apple-mobile-web-app-title" content="Royal Hostel" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="msapplication-TileColor" content="#070e17" />
-    <meta name="msapplication-navbutton-color" content="#0d9488" />
+    <meta name="msapplication-TileColor" content="#0B192C" />
+    <meta name="msapplication-navbutton-color" content="#0B192C" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

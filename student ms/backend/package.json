@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "node src/server.js",
+    "dev": "node --watch src/server.js",
     "test": "node test-e2e.js",
     "seed": "node src/seed/seed.js",
     "backup": "node src/utils/backupRestore.js backup",

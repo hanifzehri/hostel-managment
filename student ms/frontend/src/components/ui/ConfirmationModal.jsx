@@ -31,7 +31,7 @@ const ConfirmationModal = ({
       }
     >
       <div className="flex items-start space-x-4">
-        <div className="p-3 bg-amber-50 dark:bg-amber-950/50 rounded-2xl text-amber-600 border border-amber-200/50 shrink-0">
+        <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-2xl text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shrink-0">
           <AlertTriangle className="w-6 h-6" />
         </div>
         <div>

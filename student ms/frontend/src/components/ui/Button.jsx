@@ -30,9 +30,9 @@ const Button = ({
     outline:
       'border border-slate-300 dark:border-slate-700 bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 focus:ring-teal-500',
     danger:
-      'bg-rose-600 hover:bg-rose-700 text-white shadow-sm shadow-rose-200 dark:shadow-none focus:ring-rose-500',
+      'bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 focus:ring-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700',
     success:
-      'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-200 dark:shadow-none focus:ring-emerald-500',
+      'bg-teal-600 hover:bg-teal-700 text-white shadow-sm shadow-teal-500/20 focus:ring-teal-500',
     ghost:
       'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 focus:ring-slate-400',
   };

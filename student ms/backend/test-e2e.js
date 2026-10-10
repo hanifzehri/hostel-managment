@@ -13,9 +13,10 @@ const request = (path, method = 'GET', body = null, token = null) => {
       headers['Authorization'] = `Bearer ${token}`;
     }
 
+    const targetPort = process.env.TEST_PORT || 5000;
     const options = {
       hostname: '127.0.0.1',
-      port: 5000,
+      port: targetPort,
       path: encodeURI(path),
       method,
       headers,
@@ -424,6 +425,18 @@ const runTests = async () => {
     // 31. Root Dashboard Route Alias (/api/dashboard)
     const dashRootRes = await request('/api/dashboard', 'GET', null, token);
     assert(dashRootRes.status === 200 && dashRootRes.body?.stats, 'Root dashboard endpoint (/api/dashboard) responds with 200 OK');
+
+    // 32. Global Unified Database Search Across Multiple Collections
+    const searchRes = await request('/api/dashboard/search?q=Farooq', 'GET', null, token);
+    assert(
+      searchRes.status === 200 &&
+      searchRes.body?.success === true &&
+      Array.isArray(searchRes.body?.results?.students) &&
+      Array.isArray(searchRes.body?.results?.rooms) &&
+      Array.isArray(searchRes.body?.results?.staff) &&
+      Array.isArray(searchRes.body?.results?.fees),
+      'Global unified search queries database across students, rooms, staff, and fees'
+    );
 
     console.log('🧪 ========================================================');
     console.log(`🧪 INTEGRATION TEST SUITE SUMMARY: ${passed} PASSED, ${failed} FAILED`);

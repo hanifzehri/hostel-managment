@@ -164,7 +164,7 @@ const Rooms = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <div className="flex items-center space-x-2 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider mb-1">
+          <div className="flex items-center space-x-2 text-teal-600 dark:text-teal-400 text-xs font-bold uppercase tracking-wider mb-1">
             <DoorOpen className="w-4 h-4" />
             <span>Hostel Accommodation Management</span>
           </div>
@@ -187,7 +187,7 @@ const Rooms = () => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div
           onClick={() => setStatusFilter('All')}
-          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-indigo-400 transition-colors"
+          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-teal-500/50 transition-colors"
         >
           <span className="text-[10px] uppercase font-bold text-slate-400 tracking-wider block">
             Total Rooms
@@ -198,34 +198,34 @@ const Rooms = () => {
 
         <div
           onClick={() => setStatusFilter('Available')}
-          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-emerald-400 transition-colors"
+          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-teal-500/50 transition-colors"
         >
-          <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 tracking-wider block">
+          <span className="text-[10px] uppercase font-bold text-teal-600 dark:text-teal-400 tracking-wider block">
             Available Rooms
           </span>
-          <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400">{availableCount}</span>
+          <span className="text-2xl font-black text-teal-600 dark:text-teal-400">{availableCount}</span>
           <span className="text-[11px] text-slate-500 block mt-0.5">0 occupants (Ready)</span>
         </div>
 
         <div
           onClick={() => setStatusFilter('Partially Occupied')}
-          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-amber-400 transition-colors"
+          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-teal-500/50 transition-colors"
         >
-          <span className="text-[10px] uppercase font-bold text-amber-600 dark:text-amber-400 tracking-wider block">
+          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider block">
             Partially Occupied
           </span>
-          <span className="text-2xl font-black text-amber-600 dark:text-amber-400">{partialCount}</span>
+          <span className="text-2xl font-black text-slate-700 dark:text-slate-300">{partialCount}</span>
           <span className="text-[11px] text-slate-500 block mt-0.5">Beds available for booking</span>
         </div>
 
         <div
           onClick={() => setStatusFilter('Full')}
-          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-rose-400 transition-colors"
+          className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm cursor-pointer hover:border-teal-500/50 transition-colors"
         >
-          <span className="text-[10px] uppercase font-bold text-rose-600 dark:text-rose-400 tracking-wider block">
+          <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 tracking-wider block">
             Full Rooms
           </span>
-          <span className="text-2xl font-black text-rose-600 dark:text-rose-400">{fullCount}</span>
+          <span className="text-2xl font-black text-slate-900 dark:text-white">{fullCount}</span>
           <span className="text-[11px] text-slate-500 block mt-0.5">100% capacity filled</span>
         </div>
       </div>
@@ -310,7 +310,7 @@ const Rooms = () => {
                       </p>
                     </div>
 
-                    <span className="text-xs font-black text-indigo-600 dark:text-indigo-400 font-mono">
+                    <span className="text-xs font-black text-teal-600 dark:text-teal-400 font-mono">
                       {settings.currency} {room.monthlyFee.toLocaleString()}/mo
                     </span>
                   </div>
@@ -326,7 +326,7 @@ const Rooms = () => {
                     <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-300 ${
-                          isFull ? 'bg-rose-500' : 'bg-indigo-600'
+                          isFull ? 'bg-slate-900 dark:bg-slate-700' : 'bg-teal-600'
                         }`}
                         style={{
                           width: `${Math.round((room.currentOccupants / room.capacity) * 100)}%`,
@@ -349,14 +349,14 @@ const Rooms = () => {
                           key={bed._id}
                           className={`flex items-center justify-between p-2.5 rounded-xl border text-xs transition-colors ${
                             isOccupied
-                              ? 'bg-indigo-50/40 dark:bg-indigo-950/20 border-indigo-100 dark:border-indigo-900/40'
-                              : 'bg-emerald-50/40 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-900/40'
+                              ? 'bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700'
+                              : 'bg-teal-50/50 dark:bg-teal-950/20 border-teal-200/60 dark:border-teal-900/40'
                           }`}
                         >
                           <div className="flex items-center space-x-2.5 min-w-0">
                             <BedDouble
                               className={`w-4 h-4 shrink-0 ${
-                                isOccupied ? 'text-indigo-600' : 'text-emerald-600'
+                                isOccupied ? 'text-slate-500 dark:text-slate-400' : 'text-teal-600 dark:text-teal-400'
                               }`}
                             />
                             <div className="min-w-0 truncate">
@@ -368,7 +368,7 @@ const Rooms = () => {
                                   {bed.currentStudent.fullName} ({bed.currentStudent.studentId})
                                 </p>
                               ) : (
-                                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold">
+                                <p className="text-[11px] text-teal-600 dark:text-teal-400 font-semibold">
                                   Available for assignment
                                 </p>
                               )}
@@ -384,7 +384,7 @@ const Rooms = () => {
                                   setVacateConfirmOpen(true);
                                 }}
                                 title="Vacate Bed"
-                                className="px-2 py-1 text-[11px] font-bold text-rose-600 hover:bg-rose-100/60 dark:hover:bg-rose-950/60 rounded-lg transition-colors"
+                                className="px-2 py-1 text-[11px] font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
                               >
                                 Vacate
                               </button>
@@ -392,7 +392,7 @@ const Rooms = () => {
                               <button
                                 onClick={() => openAssignModal(bed)}
                                 title="Assign Student"
-                                className="px-2 py-1 text-[11px] font-bold text-indigo-600 hover:bg-indigo-100/60 dark:hover:bg-indigo-950/60 rounded-lg transition-colors"
+                                className="px-2 py-1 text-[11px] font-bold text-teal-600 dark:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/60 rounded-lg transition-colors"
                               >
                                 Assign
                               </button>

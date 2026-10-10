@@ -1,13 +1,23 @@
-const CACHE_NAME = 'royal-hostel-pwa-v1';
+const CACHE_NAME = 'royal-hostel-pwa-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
+  '/manifest.json',
   '/manifest.webmanifest',
   '/favicon.svg',
+  '/logo.svg',
+  '/logo-icon.svg',
   '/pwa-192x192.png',
   '/pwa-512x512.png',
   '/apple-touch-icon.png',
 ];
+
+// Message handler for manual skip waiting
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+});
 
 // Install: Cache essential shell
 self.addEventListener('install', (event) => {

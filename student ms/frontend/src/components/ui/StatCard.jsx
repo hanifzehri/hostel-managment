@@ -10,20 +10,18 @@ const StatCard = ({
   onClick,
 }) => {
   const colorMap = {
-    teal: 'bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-200/40 dark:border-teal-800/50',
-    navy: 'bg-slate-900/10 text-slate-800 dark:text-teal-200 border-slate-700/40 dark:border-slate-700/50',
-    indigo: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-200/40 dark:border-indigo-800/50',
-    emerald: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200/40 dark:border-emerald-800/50',
-    amber: 'bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200/40 dark:border-amber-800/50',
-    rose: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-200/40 dark:border-rose-800/50',
-    sky: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-200/40 dark:border-sky-800/50',
-    purple: 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200/40 dark:border-purple-800/50',
+    teal: 'bg-teal-50 text-teal-600 dark:bg-teal-950/50 dark:text-teal-400 border-teal-200/60 dark:border-teal-800/60',
+    navy: 'bg-slate-900 text-white dark:bg-slate-800 dark:text-slate-100 border-slate-800 dark:border-slate-700',
+    slate: 'bg-slate-100 text-slate-700 dark:bg-slate-800/80 dark:text-slate-300 border-slate-200/80 dark:border-slate-700',
   };
+
+  // Safe mapping for legacy color props
+  const resolvedColor = colorMap[color] || (['teal', 'emerald', 'sky'].includes(color) ? colorMap.teal : colorMap.slate);
 
   return (
     <div
       onClick={onClick}
-      className={`group relative overflow-hidden bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-2xl hover:border-slate-300 dark:hover:border-slate-700 ${
+      className={`group relative overflow-hidden bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg dark:hover:shadow-2xl hover:border-teal-500/40 dark:hover:border-teal-500/40 ${
         onClick ? 'cursor-pointer' : ''
       }`}
     >
@@ -31,14 +29,14 @@ const StatCard = ({
         <p className="text-xs font-bold tracking-wider text-slate-500 dark:text-slate-400 uppercase">
           {title}
         </p>
-        <div className={`p-3 rounded-2xl border transition-transform duration-300 group-hover:scale-110 ${colorMap[color] || colorMap.teal}`}>
+        <div className={`p-3 rounded-2xl border transition-transform duration-300 group-hover:scale-105 ${resolvedColor}`}>
           {Icon && <Icon className="w-5 h-5" />}
         </div>
       </div>
       <div className="mt-4 flex items-baseline justify-between">
         <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{value}</p>
         {trend && (
-          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200/50 dark:border-emerald-800/50 px-2.5 py-1 rounded-full">
+          <span className="text-xs font-bold text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/60 border border-teal-200/50 dark:border-teal-800/50 px-2.5 py-1 rounded-full">
             {trend}
           </span>
         )}

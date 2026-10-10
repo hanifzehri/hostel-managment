@@ -158,26 +158,20 @@ const FinancialReport = () => {
           </div>
 
           {/* Core Result Banner: Profit vs Loss */}
-          <div
-            className={`p-6 sm:p-8 rounded-3xl border shadow-xl relative overflow-hidden ${
-              isLoss
-                ? 'bg-gradient-to-r from-rose-950 via-slate-900 to-slate-950 border-rose-800/60 text-white'
-                : 'bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-950 border-emerald-800/60 text-white'
-            }`}
-          >
+          <div className="p-6 sm:p-8 rounded-3xl border border-slate-800 bg-slate-900 shadow-xl relative overflow-hidden text-white">
             <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <div>
                 <div className="flex items-center space-x-2 mb-2">
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${
                       isLoss
-                        ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                        ? 'bg-slate-800 text-slate-300 border border-slate-700'
+                        : 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
                     }`}
                   >
                     {isLoss ? 'Operational Net Loss' : 'Operational Net Profit'}
                   </span>
-                  <span className="text-xs font-medium text-slate-300">for {selectedMonth}</span>
+                  <span className="text-xs font-medium text-slate-400">for {selectedMonth}</span>
                 </div>
 
                 <div className="flex items-baseline space-x-3">
@@ -186,7 +180,7 @@ const FinancialReport = () => {
                   </h2>
                   <span
                     className={`text-sm font-bold ${
-                      isLoss ? 'text-rose-400' : 'text-emerald-400'
+                      isLoss ? 'text-slate-400' : 'text-teal-400'
                     }`}
                   >
                     ({isLoss ? '-' : '+'}
@@ -201,20 +195,20 @@ const FinancialReport = () => {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-center border-t md:border-t-0 md:border-l border-white/10 pt-4 md:pt-0 md:pl-6 shrink-0">
-                <div className="p-3 rounded-2xl bg-white/5 backdrop-blur-sm">
+              <div className="grid grid-cols-2 gap-4 text-center border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-6 shrink-0">
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60">
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
                     Total Revenue
                   </span>
-                  <span className="text-base font-extrabold text-emerald-400">
+                  <span className="text-base font-extrabold text-teal-400">
                     PKR {(summary.collectedRevenue || 0).toLocaleString()}
                   </span>
                 </div>
-                <div className="p-3 rounded-2xl bg-white/5 backdrop-blur-sm">
+                <div className="p-3 rounded-2xl bg-slate-800/60 border border-slate-700/60">
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
                     Total Expenses
                   </span>
-                  <span className="text-base font-extrabold text-rose-400">
+                  <span className="text-base font-extrabold text-slate-300">
                     PKR {(summary.totalExpenses || 0).toLocaleString()}
                   </span>
                 </div>
@@ -228,7 +222,7 @@ const FinancialReport = () => {
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-slate-800 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
                     <DollarSign className="w-4 h-4" />
                   </div>
                   <div>
@@ -240,7 +234,7 @@ const FinancialReport = () => {
                     </p>
                   </div>
                 </div>
-                <Badge variant="success">INCOME</Badge>
+                <Badge variant="teal">INCOME</Badge>
               </div>
 
               <div className="space-y-3 text-xs">
@@ -253,20 +247,20 @@ const FinancialReport = () => {
                   </strong>
                 </div>
 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/30">
-                  <span className="font-bold text-emerald-800 dark:text-emerald-300">
+                <div className="flex justify-between items-center p-3 rounded-xl bg-teal-50/50 dark:bg-teal-950/20 border border-teal-200/60 dark:border-teal-900/30">
+                  <span className="font-bold text-teal-800 dark:text-teal-300">
                     Actual Collected Revenue (Bank & Cash)
                   </span>
-                  <strong className="text-emerald-700 dark:text-emerald-400 font-mono text-sm">
+                  <strong className="text-teal-700 dark:text-teal-400 font-mono text-sm">
                     PKR {(summary.collectedRevenue || 0).toLocaleString()}
                   </strong>
                 </div>
 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-amber-50/50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/30">
-                  <span className="font-semibold text-amber-800 dark:text-amber-300">
+                <div className="flex justify-between items-center p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+                  <span className="font-semibold text-slate-700 dark:text-slate-300">
                     Pending Unpaid Resident Fees
                   </span>
-                  <strong className="text-amber-700 dark:text-amber-400 font-mono">
+                  <strong className="text-slate-900 dark:text-white font-mono">
                     PKR {(summary.pendingFees || 0).toLocaleString()}
                   </strong>
                 </div>
@@ -274,7 +268,7 @@ const FinancialReport = () => {
 
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs font-black">
                 <span className="text-slate-900 dark:text-white uppercase">Net Total Revenue</span>
-                <span className="text-emerald-600 dark:text-emerald-400 text-sm">
+                <span className="text-teal-600 dark:text-teal-400 text-sm">
                   PKR {(summary.collectedRevenue || 0).toLocaleString()}
                 </span>
               </div>
@@ -284,7 +278,7 @@ const FinancialReport = () => {
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold">
                     <Receipt className="w-4 h-4" />
                   </div>
                   <div>
@@ -296,7 +290,7 @@ const FinancialReport = () => {
                     </p>
                   </div>
                 </div>
-                <Badge variant="danger">EXPENSES</Badge>
+                <Badge variant="neutral">EXPENSES</Badge>
               </div>
 
               <div className="space-y-2 text-xs max-h-72 overflow-y-auto pr-1">
@@ -328,7 +322,7 @@ const FinancialReport = () => {
 
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs font-black">
                 <span className="text-slate-900 dark:text-white uppercase">Total Monthly Expenses</span>
-                <span className="text-rose-600 dark:text-rose-400 text-sm">
+                <span className="text-slate-900 dark:text-white text-sm">
                   PKR {(summary.totalExpenses || 0).toLocaleString()}
                 </span>
               </div>

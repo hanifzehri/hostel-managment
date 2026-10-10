@@ -1,5 +1,5 @@
 {
-  "name": "Royal Hostel Management System",
+  "name": "Royal Hostel Khuzdar Management System",
   "short_name": "Royal Hostel",
   "description": "Enterprise Hostel Management Platform for Windows Desktop and Mobile",
   "id": "/",
@@ -7,8 +7,8 @@
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#070e17",
-  "theme_color": "#0d9488",
+  "background_color": "#0B192C",
+  "theme_color": "#0B192C",
   "icons": [
     {
       "src": "/pwa-192x192.png",
@@ -27,6 +27,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/logo-icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
     },
     {
       "src": "/favicon.svg",

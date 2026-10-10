@@ -145,7 +145,6 @@ const StudentProfile = () => {
             variant="primary"
             size="sm"
             icon={IdCard}
-            className="bg-purple-600 hover:bg-purple-700 shadow-purple-200"
           >
             Generate Student Card
           </Button>
@@ -168,10 +167,10 @@ const StudentProfile = () => {
               <img
                 src={student.profilePicture}
                 alt={student.fullName}
-                className="w-20 h-20 rounded-2xl object-cover border-2 border-indigo-200 dark:border-indigo-800 shadow-lg shadow-indigo-500/20 shrink-0"
+                className="w-20 h-20 rounded-2xl object-cover border-2 border-teal-200/60 dark:border-slate-700 shadow-sm shrink-0"
               />
             ) : (
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-extrabold text-2xl flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
+              <div className="w-20 h-20 rounded-2xl bg-teal-600 text-white font-extrabold text-2xl flex items-center justify-center shadow-sm shrink-0">
                 {student.fullName.charAt(0)}
               </div>
             )}
@@ -182,7 +181,7 @@ const StudentProfile = () => {
                 </h1>
                 <Badge>{student.studentStatus}</Badge>
               </div>
-              <p className="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 mt-1">
+              <p className="text-xs font-mono font-bold text-teal-600 dark:text-teal-400 mt-1">
                 ID: {student.studentId} • Admission: {student.admissionNumber}
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -193,7 +192,7 @@ const StudentProfile = () => {
 
           {/* Quick Room & Bed Highlight */}
           <div className="flex items-center space-x-3 bg-slate-50 dark:bg-slate-800/80 p-4 rounded-2xl border border-slate-100 dark:border-slate-700">
-            <BedDouble className="w-8 h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
+            <BedDouble className="w-8 h-8 text-teal-600 dark:text-teal-400 shrink-0" />
             <div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Hostel Allocation</p>
               <p className="text-sm font-extrabold text-slate-900 dark:text-white">
@@ -217,7 +216,7 @@ const StudentProfile = () => {
                 onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center space-x-2 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
                   isActive
-                    ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-300 dark:shadow-none'
+                    ? 'bg-teal-600 text-white shadow-sm shadow-teal-500/20'
                     : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
               >

@@ -311,7 +311,7 @@ const Students = () => {
                   >
                     <td className="py-3.5 px-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-indigo-600 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-sm overflow-hidden border border-amber-400/40">
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-teal-600 dark:text-teal-400 font-bold flex items-center justify-center text-xs shrink-0 shadow-sm overflow-hidden border border-slate-200 dark:border-slate-700">
                           {student.profilePhoto ? (
                             <img
                               src={student.profilePhoto}
@@ -331,7 +331,7 @@ const Students = () => {
                       </div>
                     </td>
                     <td className="py-3.5 px-4 text-xs">
-                      <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400 block">
+                      <span className="font-mono font-bold text-teal-600 dark:text-teal-400 block">
                         {student.studentId}
                       </span>
                       <span className="font-mono text-[11px] text-slate-500">{student.cnic}</span>
@@ -339,7 +339,7 @@ const Students = () => {
                     <td className="py-3.5 px-4">
                       {student.room ? (
                         <div className="text-xs">
-                          <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                          <span className="font-semibold text-teal-600 dark:text-teal-400">
                             {student.block} • Room {student.room.roomNumber}
                           </span>
                           <span className="block text-[11px] text-slate-500">

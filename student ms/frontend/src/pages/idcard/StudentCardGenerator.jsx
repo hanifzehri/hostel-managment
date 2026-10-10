@@ -168,28 +168,28 @@ const StudentCardGenerator = () => {
           <div ref={cardRef} className="printable-card-wrapper">
             {!isFlipped ? (
               /* FRONT SIDE OF ID CARD (Standard CR80 Credit Card Ratio ~ 85.6mm x 54mm, vertically oriented) */
-              <div className="w-[370px] min-h-[570px] rounded-3xl bg-gradient-to-b from-indigo-950 via-slate-950 to-black text-white shadow-2xl border-4 border-amber-500/60 p-6 flex flex-col justify-between relative overflow-hidden select-none">
+              <div className="w-[370px] min-h-[570px] rounded-3xl bg-slate-900 text-white shadow-2xl border-2 border-teal-500/60 p-6 flex flex-col justify-between relative overflow-hidden select-none">
                 {/* Background ambient accents */}
-                <div className="absolute top-0 right-0 w-44 h-44 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-44 h-44 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute top-0 right-0 w-44 h-44 bg-teal-500/10 rounded-full blur-2xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-44 h-44 bg-slate-800/30 rounded-full blur-2xl pointer-events-none" />
 
                 {/* Top Header: Logo & Hostel Name */}
-                <div className="relative z-10 border-b border-amber-500/40 pb-3 text-center">
+                <div className="relative z-10 border-b border-teal-500/30 pb-3 text-center">
                   <div className="flex items-center justify-center space-x-2.5 mb-1">
-                    <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-400 to-amber-500 text-indigo-950 font-black flex items-center justify-center text-sm shadow ring-2 ring-amber-300/40 font-serif">
+                    <div className="w-8 h-8 rounded-lg bg-teal-600 text-white font-bold flex items-center justify-center text-sm shadow ring-2 ring-teal-400/40">
                       RH
                     </div>
                     <div className="text-left">
                       <h2 className="text-sm font-black tracking-wider uppercase text-white leading-tight">
                         Royal Hostel Khuzdar
                       </h2>
-                      <p className="text-[8px] uppercase tracking-widest text-amber-300 font-bold">
+                      <p className="text-[8px] uppercase tracking-widest text-teal-300 font-bold">
                         Khuzdar, Balochistan, Pakistan
                       </p>
                     </div>
                   </div>
-                  <div className="mt-1 bg-amber-400/20 rounded-full py-0.5 px-3 inline-block">
-                    <span className="text-[9px] uppercase tracking-widest text-amber-300 font-extrabold">
+                  <div className="mt-1 bg-teal-500/15 rounded-full py-0.5 px-3 inline-block border border-teal-500/30">
+                    <span className="text-[9px] uppercase tracking-widest text-teal-300 font-extrabold">
                       Official Resident Smart Pass
                     </span>
                   </div>
@@ -197,7 +197,7 @@ const StudentCardGenerator = () => {
 
                 {/* Center: Student Picture, Name, and Essential Details */}
                 <div className="relative z-10 flex flex-col items-center my-auto py-2">
-                  <div className="w-24 h-24 rounded-2xl bg-gradient-to-tr from-amber-400 to-indigo-600 p-1 shadow-2xl mb-3 border-2 border-amber-400/70 overflow-hidden">
+                  <div className="w-24 h-24 rounded-2xl bg-slate-800 p-1 shadow-xl mb-3 border-2 border-teal-500/60 overflow-hidden">
                     {selectedStudent.profilePhoto ? (
                       <img
                         src={selectedStudent.profilePhoto}
@@ -205,7 +205,7 @@ const StudentCardGenerator = () => {
                         className="w-full h-full object-cover rounded-xl"
                       />
                     ) : (
-                      <div className="w-full h-full rounded-xl bg-slate-900 flex items-center justify-center text-white font-extrabold text-3xl">
+                      <div className="w-full h-full rounded-xl bg-teal-600 flex items-center justify-center text-white font-extrabold text-3xl">
                         {selectedStudent.fullName.charAt(0)}
                       </div>
                     )}
@@ -214,19 +214,19 @@ const StudentCardGenerator = () => {
                   <h3 className="text-lg font-black tracking-tight text-white text-center">
                     {selectedStudent.fullName}
                   </h3>
-                  <p className="text-xs font-mono font-extrabold text-amber-400 tracking-wider">
+                  <p className="text-xs font-mono font-extrabold text-teal-400 tracking-wider">
                     {selectedStudent.studentId}
                   </p>
 
                   {/* Detailed Field Grid */}
-                  <div className="mt-3 w-full space-y-1.5 text-[11px] bg-slate-900/80 rounded-2xl p-3 border border-indigo-900/60">
+                  <div className="mt-3 w-full space-y-1.5 text-[11px] bg-slate-800/80 rounded-2xl p-3 border border-slate-700/80">
                     <div className="flex justify-between">
                       <span className="text-slate-400 font-medium">Father's Name:</span>
                       <strong className="text-white text-right">{selectedStudent.fatherName}</strong>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400 font-medium">CNIC Number:</span>
-                      <strong className="text-amber-300 font-mono text-right">{selectedStudent.cnic}</strong>
+                      <strong className="text-teal-300 font-mono text-right">{selectedStudent.cnic}</strong>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400 font-medium">College/University:</span>
@@ -242,30 +242,30 @@ const StudentCardGenerator = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-slate-400 font-medium">Student Contact:</span>
-                      <span className="text-emerald-400 font-mono font-bold text-right">
+                      <span className="text-teal-400 font-mono font-bold text-right">
                         {selectedStudent.phone}
                       </span>
                     </div>
                   </div>
 
                   {/* Room / Bed / Block Grid */}
-                  <div className="mt-3 w-full grid grid-cols-3 gap-2 bg-amber-400/10 backdrop-blur-md rounded-2xl p-2 border border-amber-400/30 text-center">
+                  <div className="mt-3 w-full grid grid-cols-3 gap-2 bg-slate-800/80 backdrop-blur-md rounded-2xl p-2 border border-slate-700 text-center">
                     <div>
-                      <span className="text-[8px] uppercase font-bold tracking-wider text-amber-300 block">
+                      <span className="text-[8px] uppercase font-bold tracking-wider text-slate-400 block">
                         Block
                       </span>
                       <span className="text-xs font-black text-white">{selectedStudent.block}</span>
                     </div>
-                    <div className="border-x border-amber-400/20">
-                      <span className="text-[8px] uppercase font-bold tracking-wider text-amber-300 block">
+                    <div className="border-x border-slate-700">
+                      <span className="text-[8px] uppercase font-bold tracking-wider text-teal-300 block">
                         Room
                       </span>
-                      <span className="text-xs font-black text-amber-300">
+                      <span className="text-xs font-black text-teal-400">
                         {selectedStudent.room?.roomNumber || '101'}
                       </span>
                     </div>
                     <div>
-                      <span className="text-[8px] uppercase font-bold tracking-wider text-amber-300 block">
+                      <span className="text-[8px] uppercase font-bold tracking-wider text-slate-400 block">
                         Bed
                       </span>
                       <span className="text-xs font-black text-white">
@@ -276,7 +276,7 @@ const StudentCardGenerator = () => {
                 </div>
 
                 {/* Bottom Footer: Dates, Emergency Contact & QR Code */}
-                <div className="relative z-10 border-t border-amber-500/40 pt-2.5 flex items-center justify-between">
+                <div className="relative z-10 border-t border-teal-500/30 pt-2.5 flex items-center justify-between">
                   <div className="text-left text-[10px] space-y-0.5">
                     <p className="text-slate-400">
                       Admission: <strong className="text-white">{new Date(selectedStudent.admissionDate).toLocaleDateString()}</strong>
@@ -285,7 +285,7 @@ const StudentCardGenerator = () => {
                       Issue Date: <strong className="text-white">{currentDateStr}</strong>
                     </p>
                     <p className="text-slate-400">
-                      Emergency: <strong className="text-rose-400 font-mono">{selectedStudent.emergencyPhone}</strong>
+                      Emergency: <strong className="text-slate-200 font-mono">{selectedStudent.emergencyPhone}</strong>
                     </p>
                   </div>
 
@@ -302,13 +302,13 @@ const StudentCardGenerator = () => {
               </div>
             ) : (
               /* BACK SIDE OF ID CARD */
-              <div className="w-[370px] min-h-[570px] rounded-3xl bg-slate-950 text-white shadow-2xl border-4 border-slate-700 p-6 flex flex-col justify-between select-none">
+              <div className="w-[370px] min-h-[570px] rounded-3xl bg-slate-900 text-white shadow-2xl border-2 border-slate-700 p-6 flex flex-col justify-between select-none">
                 <div className="border-b border-slate-800 pb-3 text-center">
                   <div className="flex items-center justify-center space-x-2">
-                    <div className="w-6 h-6 rounded-md bg-amber-400 text-indigo-950 font-black flex items-center justify-center text-xs">
+                    <div className="w-6 h-6 rounded-md bg-teal-600 text-white font-bold flex items-center justify-center text-xs">
                       RH
                     </div>
-                    <h3 className="text-xs font-black uppercase tracking-wider text-amber-400">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-teal-400">
                       Royal Hostel Khuzdar
                     </h3>
                   </div>
@@ -319,23 +319,23 @@ const StudentCardGenerator = () => {
 
                 <div className="space-y-3 text-[11px] text-slate-300 leading-relaxed my-auto">
                   <p className="flex items-start">
-                    <span className="text-amber-400 font-bold mr-2">1.</span>
+                    <span className="text-teal-400 font-bold mr-2">1.</span>
                     This card is non-transferable and must be presented to hostel security upon entry and exit.
                   </p>
                   <p className="flex items-start">
-                    <span className="text-amber-400 font-bold mr-2">2.</span>
+                    <span className="text-teal-400 font-bold mr-2">2.</span>
                     Hostel gate curfew is strictly 10:00 PM. Prior written approval from the Warden is required for late return.
                   </p>
                   <p className="flex items-start">
-                    <span className="text-amber-400 font-bold mr-2">3.</span>
+                    <span className="text-teal-400 font-bold mr-2">3.</span>
                     Unauthorized visitors, alcohol, smoking, weapons, and narcotics are strictly prohibited within the hostel.
                   </p>
                   <p className="flex items-start">
-                    <span className="text-amber-400 font-bold mr-2">4.</span>
+                    <span className="text-teal-400 font-bold mr-2">4.</span>
                     Scanning the QR code validates authorized student residence status via the official portal.
                   </p>
                   <p className="flex items-start">
-                    <span className="text-amber-400 font-bold mr-2">5.</span>
+                    <span className="text-teal-400 font-bold mr-2">5.</span>
                     Monthly hostel fee is payable by the 10th of every calendar month.
                   </p>
                 </div>
@@ -348,7 +348,7 @@ const StudentCardGenerator = () => {
                   <p className="text-[10px] text-slate-400">
                     College Road, Khuzdar, Balochistan, Pakistan
                   </p>
-                  <p className="text-[10px] text-amber-400 font-mono font-bold mt-1">
+                  <p className="text-[10px] text-teal-400 font-mono font-bold mt-1">
                     Emergency Contact: +92 333 7891234 / +92 848 412345
                   </p>
                 </div>
