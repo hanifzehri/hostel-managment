@@ -1,0 +1,16 @@
+{
+  "name": "student-ms-updated",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Professional Hostel Management System Full-Stack",
+  "scripts": {
+    "dev": "npm run dev --prefix \"student ms\"",
+    "dev:backend": "npm run dev:backend --prefix \"student ms\"",
+    "dev:frontend": "npm run dev:frontend --prefix \"student ms\"",
+    "start": "npm run start --prefix \"student ms\"",
+    "seed": "npm run seed --prefix \"student ms\"",
+    "build": "npm run build --prefix \"student ms/frontend\"",
+    "test": "npm test --prefix \"student ms/backend\"",
+    "install:all": "npm run install:all --prefix \"student ms\""
+  }
+}
