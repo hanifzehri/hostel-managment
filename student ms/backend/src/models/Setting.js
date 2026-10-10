@@ -50,6 +50,11 @@ const SettingSchema = new mongoose.Schema(
       type: Number,
       default: 10000,
     },
+    maxStudentCapacity: {
+      type: Number,
+      default: 40,
+      min: 1,
+    },
   },
   {
     timestamps: true,

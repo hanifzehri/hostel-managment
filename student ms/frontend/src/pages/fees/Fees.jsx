@@ -236,8 +236,8 @@ const Fees = () => {
           </p>
         </div>
         <div className="bg-white dark:bg-slate-900 p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400">Collected Revenue</span>
-          <p className="text-2xl font-black text-teal-600 dark:text-teal-400 mt-1">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#10B981]">Collected Revenue</span>
+          <p className="text-2xl font-black text-[#10B981] mt-1">
             {settings.currency} {summary.totalPaid.toLocaleString()}
           </p>
         </div>

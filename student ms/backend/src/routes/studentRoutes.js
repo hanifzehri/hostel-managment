@@ -8,6 +8,9 @@ const {
   deleteStudent,
   verifyStudent,
   uploadStudentDocument,
+  transferRoom,
+  getTransferHistory,
+  uploadStudentPhoto,
 } = require('../controllers/studentController');
 const { protect } = require('../middleware/authMiddleware');
 const { authorize } = require('../middleware/roleMiddleware');
@@ -19,6 +22,14 @@ router.get('/verify/:identifier', verifyStudent);
 // Protected routes
 router.use(protect);
 
+// Upload photo endpoint for student registration & updates
+router.post(
+  '/upload-photo',
+  authorize('superadmin', 'admin', 'receptionist'),
+  upload.single('photo'),
+  uploadStudentPhoto
+);
+
 router
   .route('/')
   .get(authorize('superadmin', 'admin', 'warden', 'receptionist', 'accountant'), getStudents)
@@ -29,6 +40,19 @@ router
   .get(getStudentById)
   .put(authorize('superadmin', 'admin', 'receptionist'), updateStudent)
   .delete(authorize('superadmin', 'admin'), deleteStudent);
+
+// Room transfer endpoints
+router.post(
+  '/:id/transfer-room',
+  authorize('superadmin', 'admin', 'warden', 'receptionist'),
+  transferRoom
+);
+
+router.get(
+  '/:id/transfer-history',
+  authorize('superadmin', 'admin', 'warden', 'receptionist', 'accountant'),
+  getTransferHistory
+);
 
 router.post(
   '/:id/documents',

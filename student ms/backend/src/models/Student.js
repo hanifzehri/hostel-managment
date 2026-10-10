@@ -30,8 +30,15 @@ const StudentSchema = new mongoose.Schema(
     },
     cnic: {
       type: String,
-      required: [true, 'CNIC / B-Form is required'],
+      required: [true, 'CNIC / B-Form is mandatory'],
       trim: true,
+      validate: {
+        validator: function (v) {
+          if (!v) return false;
+          return /^\d{5}-?\d{7}-?\d{1}$/.test(v.trim());
+        },
+        message: 'Invalid CNIC format. CNIC must be 13 digits (e.g. 54400-1234567-1).',
+      },
     },
     dob: {
       type: Date,
@@ -57,8 +64,16 @@ const StudentSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: [true, 'Phone number is required'],
+      required: [true, 'Contact number is mandatory'],
       trim: true,
+      validate: {
+        validator: function (v) {
+          if (!v) return false;
+          const clean = v.replace(/[\s-]/g, '');
+          return /^(\+92|0)?3\d{9}$/.test(clean) || /^\+?\d{10,15}$/.test(clean);
+        },
+        message: 'Invalid contact number format. Please provide a valid mobile number (e.g. 0300-1234567).',
+      },
     },
     email: {
       type: String,

@@ -233,9 +233,9 @@ const Navbar = ({ setIsMobileOpen }) => {
           <button
             type="button"
             onClick={() => setSearchModalOpen(true)}
-            className="hidden sm:flex items-center space-x-2.5 w-64 md:w-84 px-3.5 py-2 text-xs font-medium text-slate-400 bg-slate-100 dark:bg-slate-800/80 rounded-xl hover:bg-slate-200/70 dark:hover:bg-slate-700/60 border border-slate-200/60 dark:border-slate-700/60 transition-all group shadow-2xs hover:border-amber-500/40"
+            className="hidden sm:flex items-center space-x-2.5 w-64 md:w-84 px-3.5 py-2 text-xs font-medium text-slate-400 bg-slate-100 dark:bg-slate-800/80 rounded-xl hover:bg-slate-200/70 dark:hover:bg-slate-700/60 border border-slate-200/60 dark:border-slate-700/60 transition-all group shadow-2xs hover:border-blue-500/40"
           >
-            <Search className="w-4 h-4 text-slate-400 group-hover:text-amber-500 transition-colors shrink-0" />
+            <Search className="w-4 h-4 text-slate-400 group-hover:text-blue-500 transition-colors shrink-0" />
             <span className="flex-1 text-left truncate">Search students, rooms, staff, fees...</span>
             <span className="hidden md:inline-flex items-center px-1.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-900 rounded-md border border-slate-200 dark:border-slate-700 shadow-2xs">
               Ctrl K
@@ -259,9 +259,9 @@ const Navbar = ({ setIsMobileOpen }) => {
             <button
               onClick={handleInstallClick}
               title="Install Royal Hostel Management System as a native Windows App"
-              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 text-xs font-bold transition-all shadow-2xs hover:scale-105 active:scale-95"
+              className="hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-400 border border-blue-500/30 text-xs font-bold transition-all shadow-2xs hover:scale-105 active:scale-95"
             >
-              <MonitorDown className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <MonitorDown className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span className="hidden md:inline">Install Windows App</span>
               <span className="md:hidden">Install</span>
             </button>
@@ -285,7 +285,7 @@ const Navbar = ({ setIsMobileOpen }) => {
             >
               <Bell className="w-5 h-5" />
               {unreadCount > 0 && (
-                <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-amber-600 text-[10px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-slate-900">
+                <span className="absolute top-1.5 right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-slate-900">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
@@ -298,7 +298,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   {unreadCount > 0 && (
                     <button
                       onClick={handleMarkAllRead}
-                      className="text-xs text-amber-600 dark:text-amber-400 hover:underline font-semibold"
+                      className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-semibold"
                     >
                       Mark all as read
                     </button>
@@ -349,14 +349,14 @@ const Navbar = ({ setIsMobileOpen }) => {
               onClick={() => setIsProfileOpen(!isProfileOpen)}
               className="flex items-center space-x-3 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-600 to-slate-900 text-white font-bold flex items-center justify-center text-sm shadow-sm ring-1 ring-amber-500/30">
+              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-slate-900 text-white font-bold flex items-center justify-center text-sm shadow-sm ring-1 ring-blue-500/30">
                 {user?.name ? user.name.charAt(0).toUpperCase() : 'U'}
               </div>
               <div className="hidden md:block text-left pr-1">
                 <p className="text-xs font-bold text-slate-800 dark:text-slate-200 leading-tight">
                   {user?.name || 'User'}
                 </p>
-                <p className="text-[10px] text-amber-600 dark:text-amber-400 uppercase font-semibold tracking-wider">
+                <p className="text-[10px] text-blue-600 dark:text-blue-400 uppercase font-semibold tracking-wider">
                   {user?.role || 'Portal'}
                 </p>
               </div>
@@ -424,7 +424,7 @@ const Navbar = ({ setIsMobileOpen }) => {
           <div className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden flex flex-col max-h-[82vh] transition-all">
             {/* Search Input Bar */}
             <div className="relative flex items-center px-4 py-3.5 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-              <Search className="w-5 h-5 text-amber-500 mr-3 shrink-0" />
+              <Search className="w-5 h-5 text-blue-500 mr-3 shrink-0" />
               <input
                 ref={searchInputRef}
                 type="text"
@@ -437,7 +437,7 @@ const Navbar = ({ setIsMobileOpen }) => {
               {/* Action buttons on the right */}
               <div className="flex items-center space-x-2 ml-2">
                 {searchLoading ? (
-                  <Loader2 className="w-4 h-4 text-amber-500 animate-spin" />
+                  <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
                 ) : searchQuery ? (
                   <button
                     onClick={clearSearch}
@@ -467,7 +467,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   onClick={() => setActiveTab('all')}
                   className={`px-3 py-1 rounded-lg transition-colors flex items-center space-x-1.5 shrink-0 ${
                     activeTab === 'all'
-                      ? 'bg-amber-500 text-slate-950 font-bold'
+                      ? 'bg-blue-600 text-white font-bold'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -479,7 +479,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   onClick={() => setActiveTab('students')}
                   className={`px-3 py-1 rounded-lg transition-colors flex items-center space-x-1.5 shrink-0 ${
                     activeTab === 'students'
-                      ? 'bg-amber-500 text-slate-950 font-bold'
+                      ? 'bg-blue-600 text-white font-bold'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -492,7 +492,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   onClick={() => setActiveTab('rooms')}
                   className={`px-3 py-1 rounded-lg transition-colors flex items-center space-x-1.5 shrink-0 ${
                     activeTab === 'rooms'
-                      ? 'bg-amber-500 text-slate-950 font-bold'
+                      ? 'bg-blue-600 text-white font-bold'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -505,7 +505,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   onClick={() => setActiveTab('staff')}
                   className={`px-3 py-1 rounded-lg transition-colors flex items-center space-x-1.5 shrink-0 ${
                     activeTab === 'staff'
-                      ? 'bg-amber-500 text-slate-950 font-bold'
+                      ? 'bg-blue-600 text-white font-bold'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -518,7 +518,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   onClick={() => setActiveTab('fees')}
                   className={`px-3 py-1 rounded-lg transition-colors flex items-center space-x-1.5 shrink-0 ${
                     activeTab === 'fees'
-                      ? 'bg-amber-500 text-slate-950 font-bold'
+                      ? 'bg-blue-600 text-white font-bold'
                       : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
                 >
@@ -533,7 +533,7 @@ const Navbar = ({ setIsMobileOpen }) => {
             <div className="overflow-y-auto p-3 flex-1 space-y-4">
               {searchLoading && totalResults === 0 ? (
                 <div className="py-12 text-center text-xs text-slate-400 flex flex-col items-center justify-center space-y-2">
-                  <Loader2 className="w-6 h-6 text-amber-500 animate-spin" />
+                  <Loader2 className="w-6 h-6 text-blue-500 animate-spin" />
                   <span>Searching Royal Hostel database records...</span>
                 </div>
               ) : searchError ? (
@@ -543,7 +543,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   {/* Students Section */}
                   {(activeTab === 'all' || activeTab === 'students') && searchResults.students?.length > 0 && (
                     <div>
-                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center space-x-1.5">
+                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center space-x-1.5">
                         <Users className="w-3.5 h-3.5" />
                         <span>Students ({searchResults.students.length})</span>
                       </div>
@@ -562,7 +562,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                                 {stu.fullName?.charAt(0) || 'S'}
                               </div>
                               <div className="min-w-0">
-                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                   {stu.fullName}
                                 </p>
                                 <p className="text-[11px] text-slate-400 truncate">
@@ -582,7 +582,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   {/* Rooms Section */}
                   {(activeTab === 'all' || activeTab === 'rooms') && searchResults.rooms?.length > 0 && (
                     <div>
-                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center space-x-1.5">
+                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center space-x-1.5">
                         <Home className="w-3.5 h-3.5" />
                         <span>Rooms ({searchResults.rooms.length})</span>
                       </div>
@@ -597,11 +597,11 @@ const Navbar = ({ setIsMobileOpen }) => {
                             className="flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/70 cursor-pointer transition-colors group"
                           >
                             <div className="flex items-center space-x-3 min-w-0">
-                              <div className="w-8 h-8 rounded-xl bg-amber-500/10 text-amber-600 border border-amber-500/20 font-bold flex items-center justify-center text-xs shrink-0">
+                              <div className="w-8 h-8 rounded-xl bg-blue-500/10 text-blue-600 border border-blue-500/20 font-bold flex items-center justify-center text-xs shrink-0">
                                 <Home className="w-4 h-4" />
                               </div>
                               <div className="min-w-0">
-                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                   Room {rm.roomNumber} ({rm.block})
                                 </p>
                                 <p className="text-[11px] text-slate-400 truncate">
@@ -621,7 +621,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   {/* Staff Section */}
                   {(activeTab === 'all' || activeTab === 'staff') && searchResults.staff?.length > 0 && (
                     <div>
-                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center space-x-1.5">
+                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center space-x-1.5">
                         <Briefcase className="w-3.5 h-3.5" />
                         <span>Staff ({searchResults.staff.length})</span>
                       </div>
@@ -640,7 +640,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                                 {st.name?.charAt(0) || 'S'}
                               </div>
                               <div className="min-w-0">
-                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                   {st.name}
                                 </p>
                                 <p className="text-[11px] text-slate-400 truncate">
@@ -660,7 +660,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                   {/* Invoices Section */}
                   {(activeTab === 'all' || activeTab === 'fees') && searchResults.fees?.length > 0 && (
                     <div>
-                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center space-x-1.5">
+                      <div className="px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400 flex items-center space-x-1.5">
                         <Receipt className="w-3.5 h-3.5" />
                         <span>Fee Invoices ({searchResults.fees.length})</span>
                       </div>
@@ -676,10 +676,10 @@ const Navbar = ({ setIsMobileOpen }) => {
                           >
                             <div className="flex items-center space-x-3 min-w-0">
                               <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold flex items-center justify-center text-xs shrink-0">
-                                <Receipt className="w-4 h-4 text-amber-500" />
+                                <Receipt className="w-4 h-4 text-blue-500" />
                               </div>
                               <div className="min-w-0">
-                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                                   Invoice #{fee.invoiceNumber}
                                 </p>
                                 <p className="text-[11px] text-slate-400 truncate">
@@ -754,13 +754,13 @@ const Navbar = ({ setIsMobileOpen }) => {
             {/* Header with Emblem */}
             <div className="flex items-center space-x-3.5 mb-4">
               <div className="w-12 h-12 rounded-2xl bg-slate-900 border border-amber-500/30 flex items-center justify-center shadow-md shrink-0">
-                <Laptop className="w-6 h-6 text-amber-500" />
+                <Laptop className="w-6 h-6 text-blue-500" />
               </div>
               <div>
                 <h3 className="text-lg font-extrabold text-slate-900 dark:text-white leading-snug">
                   Install as Windows App
                 </h3>
-                <p className="text-xs text-amber-600 dark:text-amber-400 font-semibold">
+                <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold">
                   Royal Hostel Khuzdar Desktop PWA
                 </p>
               </div>
@@ -794,7 +794,7 @@ const Navbar = ({ setIsMobileOpen }) => {
             {/* Error state */}
             {installError && (
               <div className="mb-4 p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-800 dark:text-amber-300 text-xs flex items-start space-x-2.5">
-                <ShieldCheck className="w-4 h-4 shrink-0 text-amber-500 mt-0.5" />
+                <ShieldCheck className="w-4 h-4 shrink-0 text-blue-500 mt-0.5" />
                 <div className="flex-1">
                   <p className="font-bold">Installation Status</p>
                   <p className="text-[11px] opacity-90 mt-0.5">{installError}</p>
@@ -813,7 +813,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                     console.warn('Install button exception handled:', err);
                   }
                 }}
-                className="w-full mb-5 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-extrabold text-sm shadow-md transition-all flex items-center justify-center space-x-2 active:scale-98 disabled:opacity-50"
+                className="w-full mb-5 py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-sm shadow-md transition-all flex items-center justify-center space-x-2 active:scale-98 disabled:opacity-50"
               >
                 {isInstalling ? (
                   <>
@@ -847,7 +847,7 @@ const Navbar = ({ setIsMobileOpen }) => {
               <div className="mb-4 p-3 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/60 text-slate-700 dark:text-slate-300 text-xs space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="font-bold flex items-center space-x-1.5">
-                    <Laptop className="w-4 h-4 text-amber-500" />
+                    <Laptop className="w-4 h-4 text-blue-500" />
                     <span>Browser Installation Ready</span>
                   </span>
                   <span className="text-[10px] px-2 py-0.5 rounded-md bg-amber-500/10 text-amber-700 dark:text-amber-400 font-bold border border-amber-500/20">
@@ -863,13 +863,13 @@ const Navbar = ({ setIsMobileOpen }) => {
             {/* Browser Specific Instructions */}
             <div className="space-y-3.5 bg-slate-50 dark:bg-slate-800/60 p-4 rounded-2xl border border-slate-200/80 dark:border-slate-700/60 mb-5">
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200 flex items-center space-x-1.5">
-                <ShieldCheck className="w-4 h-4 text-amber-500" />
+                <ShieldCheck className="w-4 h-4 text-blue-500" />
                 <span>How to Install on Microsoft Edge / Google Chrome:</span>
               </h4>
 
               <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300">
                 <div className="flex items-start space-x-2.5">
-                  <div className="w-5 h-5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                     1
                   </div>
                   <div>
@@ -881,7 +881,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                 </div>
 
                 <div className="flex items-start space-x-2.5">
-                  <div className="w-5 h-5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                     2
                   </div>
                   <div>
@@ -893,7 +893,7 @@ const Navbar = ({ setIsMobileOpen }) => {
                 </div>
 
                 <div className="flex items-start space-x-2.5">
-                  <div className="w-5 h-5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
+                  <div className="w-5 h-5 rounded-full bg-amber-500/10 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center text-[10px] shrink-0 mt-0.5">
                     3
                   </div>
                   <div>

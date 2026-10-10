@@ -27,7 +27,7 @@ const getRooms = async (req, res, next) => {
       rooms.map(async (room) => {
         const beds = await Bed.find({ room: room._id }).populate(
           'currentStudent',
-          'studentId fullName phone email profilePhoto studentStatus'
+          'studentId fullName phone email profilePhoto studentStatus cnic institution admissionNumber'
         );
         return {
           ...room.toObject(),
@@ -140,7 +140,7 @@ const createRoom = async (req, res, next) => {
   }
 };
 
-// @desc    Update room details
+// @desc    Update room details and configurable capacity
 // @route   PUT /api/rooms/:id
 // @access  Private (Admin, Super Admin)
 const updateRoom = async (req, res, next) => {
@@ -150,7 +150,43 @@ const updateRoom = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Room not found.' });
     }
 
+    const newCapacity = req.body.capacity !== undefined ? Number(req.body.capacity) : room.capacity;
+    if (newCapacity < room.currentOccupants) {
+      return res.status(400).json({
+        success: false,
+        message: `Cannot reduce room capacity to ${newCapacity}. Room currently has ${room.currentOccupants} occupants.`,
+      });
+    }
+
+    // If capacity was increased, auto-create additional beds
+    const currentBeds = await Bed.find({ room: room._id });
+    if (newCapacity > currentBeds.length) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const bedsToCreate = [];
+      for (let i = currentBeds.length; i < newCapacity; i++) {
+        bedsToCreate.push({
+          bedNumber: `Bed ${alphabet[i] || i + 1}`,
+          room: room._id,
+          status: 'Available',
+          currentStudent: null,
+          monthlyRent: room.monthlyFee,
+        });
+      }
+      if (bedsToCreate.length > 0) {
+        await Bed.insertMany(bedsToCreate);
+      }
+    }
+
     Object.assign(room, req.body);
+    room.capacity = newCapacity;
+    room.availableBeds = Math.max(0, newCapacity - room.currentOccupants);
+    if (room.currentOccupants === 0) {
+      room.status = 'Available';
+    } else if (room.currentOccupants >= room.capacity) {
+      room.status = 'Full';
+    } else {
+      room.status = 'Partially Occupied';
+    }
     await room.save();
 
     await logActivity({
@@ -158,7 +194,7 @@ const updateRoom = async (req, res, next) => {
       action: 'ROOM_UPDATED',
       module: 'Room',
       recordId: room._id,
-      details: { roomNumber: room.roomNumber },
+      details: { roomNumber: room.roomNumber, capacity: room.capacity },
     });
 
     res.status(200).json({

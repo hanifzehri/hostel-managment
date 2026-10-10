@@ -237,18 +237,48 @@ const getDashboardStats = async (req, res, next) => {
       };
     });
 
-    // 8. Room Occupancy Breakdown by Block
-    const blockOccupancy = await Room.aggregate([
-      {
-        $group: {
-          _id: '$block',
-          totalRooms: { $sum: 1 },
-          totalCapacity: { $sum: '$capacity' },
-          totalOccupants: { $sum: '$currentOccupants' },
-          availableBeds: { $sum: '$availableBeds' },
+    // 8. Room Occupancy Breakdown by Block and Floor
+    const [blockOccupancy, floorOccupancy] = await Promise.all([
+      Room.aggregate([
+        {
+          $group: {
+            _id: '$block',
+            totalRooms: { $sum: 1 },
+            totalCapacity: { $sum: '$capacity' },
+            totalOccupants: { $sum: '$currentOccupants' },
+            availableBeds: { $sum: '$availableBeds' },
+          },
         },
-      },
-      { $sort: { _id: 1 } },
+        { $sort: { _id: 1 } },
+      ]),
+      Room.aggregate([
+        {
+          $group: {
+            _id: '$floor',
+            totalRooms: { $sum: 1 },
+            totalCapacity: { $sum: '$capacity' },
+            totalOccupants: { $sum: '$currentOccupants' },
+            availableBeds: { $sum: '$availableBeds' },
+            availableRooms: { $sum: { $cond: [{ $eq: ['$currentOccupants', 0] }, 1, 0] } },
+            fullRooms: { $sum: { $cond: [{ $gte: ['$currentOccupants', '$capacity'] }, 1, 0] } },
+            partiallyOccupiedRooms: {
+              $sum: {
+                $cond: [
+                  {
+                    $and: [
+                      { $gt: ['$currentOccupants', 0] },
+                      { $lt: ['$currentOccupants', '$capacity'] },
+                    ],
+                  },
+                  1,
+                  0,
+                ],
+              },
+            },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ]),
     ]);
 
     // 9. Category breakdown for chart
@@ -271,6 +301,7 @@ const getDashboardStats = async (req, res, next) => {
         location: setting?.address || 'Khuzdar, Balochistan, Pakistan',
         students: {
           total: totalStudents,
+          maxCapacity: setting?.maxStudentCapacity || 40,
           active: activeStudents,
           inactive: inactiveStudents,
           checkedOut: checkedOutStudents,
@@ -321,6 +352,7 @@ const getDashboardStats = async (req, res, next) => {
         monthlyFeeTrend: monthlyFinanceTrend,
         admissionsTrend,
         blockOccupancy,
+        floorOccupancy,
         expenseChartData,
       },
       recentActivities,

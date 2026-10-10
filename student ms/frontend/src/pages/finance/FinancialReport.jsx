@@ -166,7 +166,7 @@ const FinancialReport = () => {
                     className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest ${
                       isLoss
                         ? 'bg-slate-800 text-slate-300 border border-slate-700'
-                        : 'bg-teal-500/20 text-teal-300 border border-teal-500/30'
+                        : 'bg-emerald-500/20 text-[#10B981] border border-emerald-500/30'
                     }`}
                   >
                     {isLoss ? 'Operational Net Loss' : 'Operational Net Profit'}
@@ -180,7 +180,7 @@ const FinancialReport = () => {
                   </h2>
                   <span
                     className={`text-sm font-bold ${
-                      isLoss ? 'text-slate-400' : 'text-teal-400'
+                      isLoss ? 'text-slate-400' : 'text-[#10B981]'
                     }`}
                   >
                     ({isLoss ? '-' : '+'}
@@ -200,7 +200,7 @@ const FinancialReport = () => {
                   <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
                     Total Revenue
                   </span>
-                  <span className="text-base font-extrabold text-teal-400">
+                  <span className="text-base font-extrabold text-[#10B981]">
                     PKR {(summary.collectedRevenue || 0).toLocaleString()}
                   </span>
                 </div>
@@ -222,7 +222,7 @@ const FinancialReport = () => {
             <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 shadow-sm p-6 space-y-4">
               <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-lg bg-teal-50 dark:bg-slate-800 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-lg bg-emerald-50 dark:bg-slate-800 text-[#10B981] flex items-center justify-center font-bold">
                     <DollarSign className="w-4 h-4" />
                   </div>
                   <div>
@@ -234,7 +234,7 @@ const FinancialReport = () => {
                     </p>
                   </div>
                 </div>
-                <Badge variant="teal">INCOME</Badge>
+                <Badge variant="success">INCOME</Badge>
               </div>
 
               <div className="space-y-3 text-xs">
@@ -247,11 +247,11 @@ const FinancialReport = () => {
                   </strong>
                 </div>
 
-                <div className="flex justify-between items-center p-3 rounded-xl bg-teal-50/50 dark:bg-teal-950/20 border border-teal-200/60 dark:border-teal-900/30">
-                  <span className="font-bold text-teal-800 dark:text-teal-300">
+                <div className="flex justify-between items-center p-3 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/30">
+                  <span className="font-bold text-emerald-800 dark:text-emerald-300">
                     Actual Collected Revenue (Bank & Cash)
                   </span>
-                  <strong className="text-teal-700 dark:text-teal-400 font-mono text-sm">
+                  <strong className="text-[#10B981] font-mono text-sm">
                     PKR {(summary.collectedRevenue || 0).toLocaleString()}
                   </strong>
                 </div>
@@ -268,7 +268,7 @@ const FinancialReport = () => {
 
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex justify-between text-xs font-black">
                 <span className="text-slate-900 dark:text-white uppercase">Net Total Revenue</span>
-                <span className="text-teal-600 dark:text-teal-400 text-sm">
+                <span className="text-[#10B981] text-sm font-mono">
                   PKR {(summary.collectedRevenue || 0).toLocaleString()}
                 </span>
               </div>

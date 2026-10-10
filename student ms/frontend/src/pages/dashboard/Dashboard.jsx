@@ -30,6 +30,8 @@ import {
   Banknote,
   DollarSign,
   IdCard,
+  ArrowRightLeft,
+  Layers,
 } from 'lucide-react';
 import {
   BarChart,
@@ -47,10 +49,7 @@ import {
   Cell,
 } from 'recharts';
 
-const COLORS = [
-  '#0d9488', '#0f172a', '#64748b', '#0f766e', '#334155',
-  '#14b8a6', '#475569', '#115e59', '#1e293b', '#94a3b8',
-];
+const THEME_COLORS = ['#2563EB', '#06B6D4', '#10B981', '#F59E0B', '#EF4444', '#101828'];
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -77,7 +76,7 @@ const Dashboard = () => {
   }, []);
 
   if (loading) {
-    return <LoadingSpinner text="Loading Royal Hostel Khuzdar real-time metrics..." size="lg" />;
+    return <LoadingSpinner text="Loading Royal Hostel Khuzdar live metrics..." size="lg" />;
   }
 
   const stats = data?.stats || {};
@@ -85,35 +84,42 @@ const Dashboard = () => {
   const finance = stats.finance || {};
   const isLoss = finance.isLoss;
   const announcements = data?.activeAnnouncements || [];
+  const maxCapacity = stats.students?.maxCapacity || 40;
+  const totalStudents = stats.students?.total || 24;
 
-  // Fee collection pie data strictly using the 4-color system
+  // Fee collection pie data using the 4-color palette
   const feeStatusData = [
-    { name: 'Paid Full', value: stats.students?.paying || 14, color: '#0d9488' },
-    { name: 'Partial', value: stats.students?.partial || 3, color: '#64748b' },
-    { name: 'Unpaid / Pending', value: stats.students?.unpaid || 3, color: '#0f172a' },
+    { name: 'Paid Full', value: stats.students?.paying || 16, color: '#10B981' },
+    { name: 'Partial', value: stats.students?.partial || 4, color: '#F59E0B' },
+    { name: 'Unpaid / Pending', value: stats.students?.unpaid || 4, color: '#EF4444' },
   ].filter((item) => item.value > 0);
 
-  // Expense chart data
+  // Floor occupancy data (Floors 1, 2, 3)
+  const floorOccupancy = charts.floorOccupancy || [
+    { _id: '1', totalRooms: 4, totalCapacity: 14, totalOccupants: 8, availableBeds: 6 },
+    { _id: '2', totalRooms: 4, totalCapacity: 14, totalOccupants: 8, availableBeds: 6 },
+    { _id: '3', totalRooms: 4, totalCapacity: 14, totalOccupants: 8, availableBeds: 6 },
+  ];
+
   const expenseData = charts.expenseChartData || [];
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Welcome & Branding Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-slate-900 dark:bg-slate-900 p-6 sm:p-8 text-white shadow-xl border border-slate-800">
+      {/* 1. Welcome & Branding Banner (Deep Navy #101828 + Primary Blue #2563EB) */}
+      <div className="relative overflow-hidden rounded-3xl bg-[#101828] text-white p-6 sm:p-8 shadow-xl border border-slate-800">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div className="space-y-3">
-            {/* Emblem & Hostel Identity */}
             <HostelLogo size="lg" variant="light" subtitle="Premier Resident Living • Khuzdar, Balochistan" />
 
             <div>
               <h1 className="text-xl sm:text-2xl font-black tracking-tight mt-2 text-white">
-                Executive Operations Dashboard
+                Executive Hostel Operations Dashboard
               </h1>
               <p className="mt-1 text-xs sm:text-sm text-slate-300 max-w-xl">
-                Logged in as <strong className="text-teal-300">{user?.name || 'Administrator'}</strong>. Currently monitoring{' '}
-                <strong className="text-white">{stats.students?.total || 20} students</strong> and{' '}
-                <strong className="text-white">{stats.staff?.total || 10} hostel workers</strong> at{' '}
-                <strong className="text-teal-400">{stats.beds?.occupancyRate || 77}% occupancy</strong>.
+                Logged in as <strong className="text-[#06B6D4]">{user?.name || 'Administrator'}</strong>. Monitoring{' '}
+                <strong className="text-white font-mono">{totalStudents} / {maxCapacity} residents</strong> across{' '}
+                <strong className="text-white">3 floors (12 rooms)</strong> at{' '}
+                <strong className="text-[#10B981] font-mono">{stats.beds?.occupancyRate || 60}% occupancy</strong>.
               </p>
             </div>
           </div>
@@ -126,7 +132,16 @@ const Dashboard = () => {
               size="sm"
               icon={Users}
             >
-              {stats.students?.total || 20} Students
+              {totalStudents} Students
+            </Button>
+            <Button
+              onClick={() => navigate('/rooms')}
+              variant="outline"
+              size="sm"
+              icon={Building}
+              className="text-white border-slate-700 hover:bg-slate-800"
+            >
+              12 Rooms Hub
             </Button>
             <Button
               onClick={() => navigate('/id-cards')}
@@ -135,25 +150,16 @@ const Dashboard = () => {
               icon={IdCard}
               className="text-white border-slate-700 hover:bg-slate-800"
             >
-              ID Cards
+              Smart Cards
             </Button>
             <Button
-              onClick={() => navigate('/salaries')}
+              onClick={() => navigate('/fees')}
               variant="outline"
               size="sm"
-              icon={Banknote}
+              icon={CreditCard}
               className="text-white border-slate-700 hover:bg-slate-800"
             >
-              Staff Salaries
-            </Button>
-            <Button
-              onClick={() => navigate('/expenses')}
-              variant="outline"
-              size="sm"
-              icon={Receipt}
-              className="text-white border-slate-700 hover:bg-slate-800"
-            >
-              Expenses
+              Fee Invoices
             </Button>
             <Button
               onClick={() => navigate('/financial-report')}
@@ -168,15 +174,15 @@ const Dashboard = () => {
         </div>
 
         {/* Ambient Decorative Accents */}
-        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-[#2563EB]/15 rounded-full blur-3xl pointer-events-none" />
       </div>
 
       {/* Announcements Notice if any */}
       {announcements.length > 0 && (
-        <div className="p-4 rounded-2xl bg-teal-50/60 dark:bg-slate-900 border border-teal-200/60 dark:border-slate-800 flex items-start space-x-3.5">
-          <AlertCircle className="w-5 h-5 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" />
+        <div className="p-4 rounded-2xl bg-blue-50/60 dark:bg-[#1D2939] border border-blue-200/60 dark:border-slate-800 flex items-start space-x-3.5">
+          <AlertCircle className="w-5 h-5 text-[#2563EB] dark:text-[#06B6D4] shrink-0 mt-0.5" />
           <div className="flex-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-300">
+            <span className="text-xs font-bold uppercase tracking-wider text-[#2563EB] dark:text-[#06B6D4]">
               Hostel Notice: {announcements[0].title}
             </span>
             <p className="text-xs sm:text-sm text-slate-700 dark:text-slate-300 mt-0.5 leading-relaxed">
@@ -185,173 +191,192 @@ const Dashboard = () => {
           </div>
           <Link
             to="/announcements"
-            className="text-xs font-bold text-teal-700 dark:text-teal-300 hover:underline shrink-0"
+            className="text-xs font-bold text-[#2563EB] dark:text-[#06B6D4] hover:underline shrink-0"
           >
             All Notices
           </Link>
         </div>
       )}
 
-      {/* 10 Core Cards Specified in Requirement Section 14 */}
+      {/* 2. Key Operational & Financial Metrics */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-extrabold text-slate-900 dark:text-white uppercase tracking-wider">
+          <h2 className="text-base font-extrabold text-[#101828] dark:text-white uppercase tracking-wider">
             Key Operational & Financial Indicators
           </h2>
-          <span className="text-xs font-bold text-slate-400">Live MongoDB Aggregated Metrics</span>
+          <span className="text-xs font-bold text-[#2563EB] dark:text-[#06B6D4]">
+            Capacity: {totalStudents} / {maxCapacity} Max Residents
+          </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {/* 1. Total Students */}
+          {/* 1. Total Students with Max 40 Capacity */}
           <StatCard
             title="Total Students"
-            value={stats.students?.total || 20}
-            subtext={`${stats.students?.active || 20} Active residents`}
+            value={`${totalStudents} / ${maxCapacity}`}
+            subtext={`${stats.students?.active || totalStudents} Active residents`}
             icon={Users}
-            color="teal"
+            color="primary"
             onClick={() => navigate('/students')}
           />
 
-          {/* 2. Total Rooms */}
+          {/* 2. Room Occupancy (12 Rooms Total) */}
           <StatCard
-            title="Total Rooms"
-            value={stats.rooms?.total || 10}
-            subtext="Across Block A, B & C"
-            icon={DoorOpen}
+            title="Room Occupancy"
+            value={`${(stats.rooms?.total || 12) - (stats.rooms?.available || 0)} / ${stats.rooms?.total || 12}`}
+            subtext={`${stats.rooms?.full || 0} Full • ${stats.rooms?.partiallyOccupied || 0} Partial`}
+            icon={Building}
             color="navy"
             onClick={() => navigate('/rooms')}
           />
 
-          {/* 3. Occupied Rooms */}
-          <StatCard
-            title="Occupied Rooms"
-            value={(stats.rooms?.total || 10) - (stats.rooms?.available || 0)}
-            subtext={`${stats.rooms?.full || 0} Full • ${stats.rooms?.partiallyOccupied || 0} Partial`}
-            icon={Building}
-            color="slate"
-            onClick={() => navigate('/rooms')}
-          />
-
-          {/* 4. Available Beds */}
+          {/* 3. Available Beds */}
           <StatCard
             title="Available Beds"
-            value={stats.beds?.vacant || 6}
-            subtext={`${stats.beds?.occupied || 20} Beds occupied (${stats.beds?.occupancyRate || 77}%)`}
+            value={stats.beds?.vacant || 18}
+            subtext={`${stats.beds?.occupied || 24} Occupied (${stats.beds?.occupancyRate || 57}%)`}
             icon={BedDouble}
-            color="teal"
+            color="cyan"
             onClick={() => navigate('/rooms')}
           />
 
-          {/* 5. Monthly Revenue */}
+          {/* 4. Total Monthly Fees (Collected Revenue) */}
           <StatCard
-            title="Monthly Revenue"
-            value={`PKR ${(finance.monthlyRevenue || 155000).toLocaleString()}`}
-            subtext="Collected student fees this month"
+            title="Total Monthly Fees"
+            value={`PKR ${(finance.monthlyRevenue || 240000).toLocaleString()}`}
+            subtext="Fee collections received"
             icon={DollarSign}
-            color="teal"
+            color="green"
             onClick={() => navigate('/fees')}
           />
 
-          {/* 6. Monthly Expenses */}
+          {/* 5. Pending Payments */}
           <StatCard
-            title="Monthly Expenses"
-            value={`PKR ${(finance.monthlyExpenses || 0).toLocaleString()}`}
-            subtext="Salaries, mess, utilities & repairs"
-            icon={Receipt}
-            color="navy"
-            onClick={() => navigate('/expenses')}
-          />
-
-          {/* 7. Monthly Profit / Loss */}
-          <div
-            onClick={() => navigate('/financial-report')}
-            className="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all cursor-pointer hover:-translate-y-1 hover:border-teal-500/40"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                Monthly {isLoss ? 'Loss' : 'Profit'}
-              </span>
-              <div
-                className={`p-2 rounded-xl border ${
-                  isLoss
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'
-                    : 'bg-teal-50 dark:bg-teal-950/50 text-teal-600 dark:text-teal-400 border-teal-200/60 dark:border-teal-800/60'
-                }`}
-              >
-                {isLoss ? <TrendingDown className="w-5 h-5" /> : <TrendingUp className="w-5 h-5" />}
-              </div>
-            </div>
-            <div className="mt-3">
-              <p
-                className={`text-2xl font-black ${
-                  isLoss ? 'text-slate-900 dark:text-white' : 'text-teal-600 dark:text-teal-400'
-                }`}
-              >
-                {isLoss ? '-' : '+'}PKR {(finance.monthlyProfit || 0).toLocaleString()}
-              </p>
-              <div className="flex items-center space-x-1.5 mt-1">
-                <span
-                  className={`text-[10px] font-extrabold uppercase px-1.5 py-0.5 rounded ${
-                    isLoss ? 'bg-slate-900 text-white dark:bg-slate-800' : 'bg-teal-600 text-white'
-                  }`}
-                >
-                  {isLoss ? 'DEFICIT / LOSS' : 'PROFIT'}
-                </span>
-                <span className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                  {finance.profitMargin}% margin
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* 8. Pending Fees */}
-          <StatCard
-            title="Pending Fees"
+            title="Pending Payments"
             value={`PKR ${(finance.pendingStudentFees || 45000).toLocaleString()}`}
             subtext="Uncollected student dues this month"
             icon={Clock}
-            color="slate"
+            color="amber"
             onClick={() => navigate('/fees')}
-          />
-
-          {/* 9. Total Staff */}
-          <StatCard
-            title="Total Staff"
-            value={stats.staff?.total || 10}
-            subtext="10 distinct workers on campus"
-            icon={Users}
-            color="teal"
-            onClick={() => navigate('/staff')}
-          />
-
-          {/* 10. Staff Salary Expense */}
-          <StatCard
-            title="Staff Salary Expense"
-            value={`PKR ${(stats.staff?.monthlySalaryExpense || 342000).toLocaleString()}`}
-            subtext="Dynamic sum of 10 worker salaries"
-            icon={Banknote}
-            color="navy"
-            onClick={() => navigate('/salaries')}
           />
         </div>
       </div>
 
-      {/* Primary Analytics Charts Section */}
+      {/* 3. Three-Floor Structure Quick Overview (Floors 1, 2, 3 with 4 Rooms Each) */}
+      <div className="bg-white dark:bg-[#1D2939] p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-5">
+          <div>
+            <div className="flex items-center space-x-2 text-[#2563EB] dark:text-[#06B6D4] text-xs font-bold uppercase tracking-wider mb-1">
+              <Layers className="w-4 h-4" />
+              <span>Three-Floor Hostel Architecture (12 Rooms Total)</span>
+            </div>
+            <h3 className="text-base font-black text-[#101828] dark:text-white">
+              Floor & Room Occupancy Breakdown
+            </h3>
+          </div>
+          <Link
+            to="/rooms"
+            className="text-xs font-bold text-[#2563EB] dark:text-[#06B6D4] hover:underline flex items-center"
+          >
+            Manage Rooms & Capacity <ArrowUpRight className="w-3.5 h-3.5 ml-1" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {['1', '2', '3'].map((floorNum) => {
+            const floorData = floorOccupancy.find((f) => String(f._id) === floorNum) || {
+              totalRooms: 4,
+              totalCapacity: 14,
+              totalOccupants: 8,
+              availableBeds: 6,
+            };
+            const roomList =
+              floorNum === '1'
+                ? ['101', '102', '103', '104']
+                : floorNum === '2'
+                ? ['201', '202', '203', '204']
+                : ['301', '302', '303', '304'];
+
+            const occRate = floorData.totalCapacity > 0
+              ? Math.round((floorData.totalOccupants / floorData.totalCapacity) * 100)
+              : 0;
+
+            return (
+              <div
+                key={floorNum}
+                className="bg-[#F8FAFC] dark:bg-[#101828] rounded-2xl p-4 border border-slate-200 dark:border-slate-700 flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-black uppercase tracking-wider text-[#2563EB] dark:text-[#06B6D4]">
+                      Floor {floorNum}
+                    </span>
+                    <span className="text-xs font-bold text-slate-500 font-mono">
+                      {occRate}% Full
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm font-extrabold text-[#101828] dark:text-white">
+                    <span>Rooms {roomList[0]} - {roomList[3]}</span>
+                    <span className="text-xs font-mono font-bold text-[#10B981]">
+                      {floorData.availableBeds} beds free
+                    </span>
+                  </div>
+
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden my-3">
+                    <div
+                      className={`h-full transition-all ${
+                        occRate >= 90
+                          ? 'bg-[#EF4444]'
+                          : occRate >= 50
+                          ? 'bg-[#F59E0B]'
+                          : 'bg-[#10B981]'
+                      }`}
+                      style={{ width: `${Math.min(100, occRate)}%` }}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-4 gap-1.5 mt-2">
+                    {roomList.map((roomNum) => (
+                      <div
+                        key={roomNum}
+                        onClick={() => navigate('/rooms')}
+                        className="p-1.5 rounded-lg bg-white dark:bg-slate-800 text-center border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-[#2563EB]"
+                      >
+                        <span className="text-[10px] font-mono font-bold text-[#101828] dark:text-white block">
+                          {roomNum}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-slate-200 dark:border-slate-700 mt-3 flex items-center justify-between text-[11px] text-slate-500">
+                  <span>Occupants: <strong className="text-[#101828] dark:text-white">{floorData.totalOccupants}</strong></span>
+                  <span>Capacity: <strong className="text-[#101828] dark:text-white">{floorData.totalCapacity}</strong></span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 4. Primary Analytics Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Chart 1: Monthly Revenue vs Expenses vs Profit */}
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        {/* Chart 1: Monthly Revenue vs Expenses */}
+        <div className="bg-white dark:bg-[#1D2939] p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Monthly Revenue, Expenses & Net Cash Flow
+              <h3 className="text-base font-bold text-[#101828] dark:text-white">
+                Monthly Fee Revenue vs Hostel Expenses
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Dynamic comparisons in {settings.currency || 'PKR'}
+                Financial performance comparisons in PKR
               </p>
             </div>
             <Link
               to="/financial-report"
-              className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline flex items-center"
+              className="text-xs font-bold text-[#2563EB] dark:text-[#06B6D4] hover:underline flex items-center"
             >
               Statement <ArrowUpRight className="w-3.5 h-3.5 ml-1" />
             </Link>
@@ -368,7 +393,7 @@ const Dashboard = () => {
                 <Tooltip
                   formatter={(val) => `PKR ${val.toLocaleString()}`}
                   contentStyle={{
-                    backgroundColor: '#0f172a',
+                    backgroundColor: '#101828',
                     borderRadius: '12px',
                     border: 'none',
                     color: '#fff',
@@ -376,89 +401,39 @@ const Dashboard = () => {
                   }}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="revenue" name="Collected Revenue" fill="#0d9488" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="expenses" name="Hostel Expenses" fill="#64748b" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revenue" name="Fee Revenue" fill="#2563EB" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="expenses" name="Hostel Expenses" fill="#1D2939" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Chart 2: Expense Categories Breakdown */}
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Hostel Expense Categories
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Salaries, food, utilities, rent & maintenance allocation
-              </p>
-            </div>
-            <Link
-              to="/expenses"
-              className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline"
-            >
-              Ledger
-            </Link>
-          </div>
-          <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={expenseData.slice(0, 7)}
-                layout="vertical"
-                margin={{ top: 5, right: 20, left: 40, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
-                <XAxis type="number" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <YAxis type="category" dataKey="name" stroke="#94a3b8" fontSize={11} tickLine={false} />
-                <Tooltip
-                  formatter={(val) => `PKR ${val.toLocaleString()}`}
-                  contentStyle={{
-                    backgroundColor: '#0f172a',
-                    borderRadius: '12px',
-                    color: '#fff',
-                    fontSize: '12px',
-                  }}
-                />
-                <Bar dataKey="value" name="Amount" fill="#0d9488" radius={[0, 4, 4, 0]}>
-                  {expenseData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      {/* Secondary Analytics: Student Fee Collection & Block Occupancy */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Student Fee Collection Distribution */}
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
+        {/* Chart 2: Student Fee Payment Status Distribution */}
+        <div className="bg-white dark:bg-[#1D2939] p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Student Fee Collection Status (20 Students)
+              <h3 className="text-base font-bold text-[#101828] dark:text-white">
+                Student Monthly Fee Status ({totalStudents} Students)
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Paid in Full vs Partial vs Pending Dues
               </p>
             </div>
-            <Link to="/fees" className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline">
+            <Link to="/fees" className="text-xs font-bold text-[#2563EB] dark:text-[#06B6D4] hover:underline">
               Manage Fees
             </Link>
           </div>
 
-          <div className="h-60 w-full flex items-center justify-center">
+          <div className="h-72 w-full flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   data={feeStatusData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={50}
-                  outerRadius={75}
-                  paddingAngle={4}
+                  innerRadius={55}
+                  outerRadius={85}
+                  paddingAngle={5}
                   dataKey="value"
                 >
                   {feeStatusData.map((entry, index) => (
@@ -467,42 +442,10 @@ const Dashboard = () => {
                 </Pie>
                 <Tooltip
                   formatter={(val) => `${val} Students`}
-                  contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', color: '#fff', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#101828', borderRadius: '12px', color: '#fff', fontSize: '12px' }}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
               </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Room Occupancy By Block */}
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                Room & Bed Capacity by Block
-              </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                Occupants vs Total Bed Capacity
-              </p>
-            </div>
-            <Link to="/rooms" className="text-xs font-bold text-teal-600 dark:text-teal-400 hover:underline">
-              Rooms Hub
-            </Link>
-          </div>
-          <div className="h-60 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={charts.blockOccupancy || []} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                <XAxis dataKey="_id" stroke="#94a3b8" fontSize={12} tickLine={false} />
-                <YAxis stroke="#94a3b8" fontSize={12} tickLine={false} />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#0f172a', borderRadius: '12px', border: 'none', color: '#fff', fontSize: '12px' }}
-                />
-                <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="totalOccupants" name="Occupants" fill="#0d9488" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="totalCapacity" name="Capacity" fill="#94a3b8" radius={[4, 4, 0, 0]} />
-              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>

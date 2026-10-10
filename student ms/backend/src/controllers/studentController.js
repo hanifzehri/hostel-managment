@@ -7,10 +7,12 @@ const LeaveRequest = require('../models/LeaveRequest');
 const Visitor = require('../models/Visitor');
 const Complaint = require('../models/Complaint');
 const ActivityLog = require('../models/ActivityLog');
+const Setting = require('../models/Setting');
+const RoomTransferHistory = require('../models/RoomTransferHistory');
 const { generateStudentId, generateAdmissionNumber } = require('../utils/idGenerator');
 const { logActivity } = require('../utils/auditLogger');
 
-// Helper to recalculate room occupancy
+// Helper to recalculate room occupancy and set proper status
 const updateRoomOccupancy = async (roomId) => {
   if (!roomId) return;
   const room = await Room.findById(roomId);
@@ -21,7 +23,13 @@ const updateRoomOccupancy = async (roomId) => {
 
   room.currentOccupants = occupiedCount;
   room.availableBeds = Math.max(0, (room.capacity || totalBeds) - occupiedCount);
-  room.status = room.availableBeds === 0 ? 'Full' : 'Available';
+  if (room.currentOccupants === 0) {
+    room.status = 'Available';
+  } else if (room.currentOccupants >= room.capacity) {
+    room.status = 'Full';
+  } else {
+    room.status = 'Partially Occupied';
+  }
   await room.save();
 };
 
@@ -194,6 +202,45 @@ const createStudent = async (req, res, next) => {
   try {
     const studentData = { ...req.body };
 
+    // 1. Enforce 40 Student Hostel Maximum Capacity
+    const setting = await Setting.findOne();
+    const maxStudents = setting?.maxStudentCapacity || 40;
+    const activeStudentCount = await Student.countDocuments({
+      studentStatus: { $in: ['Active', 'Pending'] },
+    });
+
+    if (activeStudentCount >= maxStudents) {
+      return res.status(400).json({
+        success: false,
+        message: `Hostel capacity limit reached (${activeStudentCount}/${maxStudents} students). Cannot register additional residents.`,
+      });
+    }
+
+    // 2. Mandatory CNIC Validation
+    if (!studentData.cnic || !String(studentData.cnic).trim()) {
+      return res.status(400).json({ success: false, message: 'CNIC number is required.' });
+    }
+    const cnicTrimmed = String(studentData.cnic).trim();
+    if (!/^\d{5}-?\d{7}-?\d{1}$/.test(cnicTrimmed)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid CNIC format. CNIC must be 13 digits (e.g. 54400-1234567-1).',
+      });
+    }
+    studentData.cnic = cnicTrimmed;
+
+    // 3. Mandatory Contact Number Validation
+    if (!studentData.phone || !String(studentData.phone).trim()) {
+      return res.status(400).json({ success: false, message: 'Contact number is required.' });
+    }
+    const phoneClean = String(studentData.phone).replace(/[\s-]/g, '');
+    if (!(/^(\+92|0)?3\d{9}$/.test(phoneClean) || /^\+?\d{10,15}$/.test(phoneClean))) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid contact number. Please provide a valid mobile number (e.g. 0300-1234567).',
+      });
+    }
+
     // Auto generate sequential student ID and admission number if not provided
     if (!studentData.studentId) {
       studentData.studentId = await generateStudentId();
@@ -237,9 +284,22 @@ const createStudent = async (req, res, next) => {
       studentData.room = bed.room;
       room = await Room.findById(bed.room);
       if (room) {
+        if (room.currentOccupants >= room.capacity) {
+          return res.status(400).json({
+            success: false,
+            message: `Room ${room.roomNumber} is at maximum capacity (${room.capacity} occupants).`,
+          });
+        }
         studentData.block = room.block;
         studentData.floor = room.floor;
       }
+    }
+
+    // Sync profilePhoto and profilePicture
+    if (studentData.profilePhoto && !studentData.profilePicture) {
+      studentData.profilePicture = studentData.profilePhoto;
+    } else if (studentData.profilePicture && !studentData.profilePhoto) {
+      studentData.profilePhoto = studentData.profilePicture;
     }
 
     const student = await Student.create(studentData);
@@ -260,6 +320,7 @@ const createStudent = async (req, res, next) => {
       details: {
         studentId: student.studentId,
         name: student.fullName,
+        cnic: student.cnic,
         room: room ? room.roomNumber : null,
         bed: bed ? bed.bedNumber : null,
       },
@@ -283,6 +344,39 @@ const updateStudent = async (req, res, next) => {
     const student = await Student.findById(req.params.id);
     if (!student) {
       return res.status(404).json({ success: false, message: 'Student not found.' });
+    }
+
+    // CNIC Validation & Uniqueness check on update
+    if (req.body.cnic) {
+      const cnicTrimmed = String(req.body.cnic).trim();
+      if (!/^\d{5}-?\d{7}-?\d{1}$/.test(cnicTrimmed)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid CNIC format. CNIC must be 13 digits (e.g. 54400-1234567-1).',
+        });
+      }
+      const existingCnic = await Student.findOne({
+        _id: { $ne: student._id },
+        cnic: cnicTrimmed,
+      });
+      if (existingCnic) {
+        return res.status(400).json({
+          success: false,
+          message: `CNIC '${cnicTrimmed}' is already registered with student ${existingCnic.fullName}.`,
+        });
+      }
+      req.body.cnic = cnicTrimmed;
+    }
+
+    // Phone Validation on update
+    if (req.body.phone) {
+      const phoneClean = String(req.body.phone).replace(/[\s-]/g, '');
+      if (!(/^(\+92|0)?3\d{9}$/.test(phoneClean) || /^\+?\d{10,15}$/.test(phoneClean))) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid contact number. Please provide a valid mobile number (e.g. 0300-1234567).',
+        });
+      }
     }
 
     const oldBedId = student.bed ? String(student.bed) : null;
@@ -324,6 +418,13 @@ const updateStudent = async (req, res, next) => {
         req.body.floor = room.floor;
       }
       await updateRoomOccupancy(newBed.room);
+    }
+
+    // Sync profilePhoto and profilePicture
+    if (req.body.profilePhoto && !req.body.profilePicture) {
+      req.body.profilePicture = req.body.profilePhoto;
+    } else if (req.body.profilePicture && !req.body.profilePhoto) {
+      req.body.profilePhoto = req.body.profilePicture;
     }
 
     // Apply updates
@@ -484,6 +585,211 @@ const uploadStudentDocument = async (req, res, next) => {
   }
 };
 
+// @desc    Transfer student to another room
+// @route   POST /api/students/:id/transfer-room
+// @access  Private (Admin, Super Admin, Receptionist)
+const transferRoom = async (req, res, next) => {
+  try {
+    const student = await Student.findById(req.params.id);
+    if (!student) {
+      return res.status(404).json({ success: false, message: 'Student record not found.' });
+    }
+
+    const { newRoomId, newBedId, reason } = req.body;
+    if (!newRoomId) {
+      return res.status(400).json({ success: false, message: 'Please select a destination room.' });
+    }
+
+    const targetRoom = await Room.findById(newRoomId);
+    if (!targetRoom) {
+      return res.status(404).json({ success: false, message: 'Destination room not found.' });
+    }
+
+    // Check if target room is the student's current room
+    if (student.room && String(student.room) === String(targetRoom._id)) {
+      return res.status(400).json({
+        success: false,
+        message: `Student is already residing in Room ${targetRoom.roomNumber}.`,
+      });
+    }
+
+    // Prevent transfer to full rooms
+    const occupiedCount = await Bed.countDocuments({ room: targetRoom._id, status: 'Occupied' });
+    if (occupiedCount >= targetRoom.capacity || targetRoom.availableBeds <= 0 || targetRoom.status === 'Full') {
+      return res.status(400).json({
+        success: false,
+        message: `Destination Room ${targetRoom.roomNumber} is at full capacity (${targetRoom.capacity} students). Transfer rejected.`,
+      });
+    }
+
+    // Capture old room & bed details for audit trail
+    const oldRoomId = student.room;
+    let oldRoomNumber = 'Unassigned';
+    let oldFloor = student.floor || 1;
+    if (oldRoomId) {
+      const oldRoom = await Room.findById(oldRoomId);
+      if (oldRoom) {
+        oldRoomNumber = oldRoom.roomNumber;
+        oldFloor = oldRoom.floor;
+      }
+    }
+
+    const oldBedId = student.bed;
+    let oldBedNumber = 'None';
+    if (oldBedId) {
+      const oldBed = await Bed.findById(oldBedId);
+      if (oldBed) {
+        oldBedNumber = oldBed.bedNumber;
+        oldBed.status = 'Available';
+        oldBed.currentStudent = null;
+        await oldBed.save();
+      }
+    }
+
+    // Select or auto-assign bed in target room
+    let targetBed = null;
+    if (newBedId) {
+      targetBed = await Bed.findOne({ _id: newBedId, room: targetRoom._id });
+      if (!targetBed) {
+        return res.status(404).json({ success: false, message: 'Selected bed does not exist in target room.' });
+      }
+      if (targetBed.status === 'Occupied' && String(targetBed.currentStudent) !== String(student._id)) {
+        return res.status(400).json({
+          success: false,
+          message: `Bed ${targetBed.bedNumber} in Room ${targetRoom.roomNumber} is already occupied.`,
+        });
+      }
+    } else {
+      // Find first available bed in target room
+      targetBed = await Bed.findOne({ room: targetRoom._id, status: 'Available' });
+      if (!targetBed) {
+        // If within capacity, create next bed
+        const currentBedsCount = await Bed.countDocuments({ room: targetRoom._id });
+        if (currentBedsCount < targetRoom.capacity) {
+          const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+          targetBed = await Bed.create({
+            bedNumber: `Bed ${alphabet[currentBedsCount] || currentBedsCount + 1}`,
+            room: targetRoom._id,
+            status: 'Available',
+            currentStudent: null,
+            monthlyRent: targetRoom.monthlyFee,
+          });
+        } else {
+          return res.status(400).json({
+            success: false,
+            message: `No available beds in Room ${targetRoom.roomNumber}.`,
+          });
+        }
+      }
+    }
+
+    // Occupy target bed
+    targetBed.status = 'Occupied';
+    targetBed.currentStudent = student._id;
+    await targetBed.save();
+
+    // Update student assignment
+    student.room = targetRoom._id;
+    student.bed = targetBed._id;
+    student.floor = targetRoom.floor;
+    student.block = targetRoom.block;
+    await student.save();
+
+    // Recalculate room occupancy for both rooms
+    if (oldRoomId) {
+      await updateRoomOccupancy(oldRoomId);
+    }
+    await updateRoomOccupancy(targetRoom._id);
+
+    // Save transfer record in RoomTransferHistory
+    const transferRecord = await RoomTransferHistory.create({
+      student: student._id,
+      studentId: student.studentId,
+      studentName: student.fullName,
+      fromRoom: oldRoomId || null,
+      fromRoomNumber: oldRoomNumber,
+      fromFloor: oldFloor,
+      fromBed: oldBedId || null,
+      fromBedNumber: oldBedNumber,
+      toRoom: targetRoom._id,
+      toRoomNumber: targetRoom.roomNumber,
+      toFloor: targetRoom.floor,
+      toBed: targetBed._id,
+      toBedNumber: targetBed.bedNumber,
+      reason: reason || 'Administrative room transfer requested by resident/hostel management.',
+      transferredBy: req.user ? req.user._id : null,
+      transferredByName: req.user ? req.user.name : 'Hostel Administrator',
+      transferredAt: new Date(),
+    });
+
+    // Log to ActivityLog
+    await logActivity({
+      req,
+      action: 'STUDENT_ROOM_TRANSFERRED',
+      module: 'Student',
+      recordId: student._id,
+      details: {
+        studentId: student.studentId,
+        studentName: student.fullName,
+        fromRoom: oldRoomNumber,
+        toRoom: targetRoom.roomNumber,
+        bed: targetBed.bedNumber,
+        reason: reason || 'Room transfer',
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Student ${student.fullName} transferred to Room ${targetRoom.roomNumber} (${targetBed.bedNumber}) successfully.`,
+      student,
+      transferRecord,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Get transfer history for a student
+// @route   GET /api/students/:id/transfer-history
+// @access  Private
+const getTransferHistory = async (req, res, next) => {
+  try {
+    const history = await RoomTransferHistory.find({ student: req.params.id })
+      .populate('fromRoom', 'roomNumber floor')
+      .populate('toRoom', 'roomNumber floor')
+      .sort({ transferredAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: history.length,
+      data: history,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Upload persistent student photograph
+// @route   POST /api/students/upload-photo
+// @access  Private
+const uploadStudentPhoto = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'Please select an image file to upload.' });
+    }
+
+    const photoUrl = `/uploads/${req.file.filename}`;
+
+    res.status(200).json({
+      success: true,
+      message: 'Photo uploaded successfully.',
+      photoUrl,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getStudents,
   getStudentById,
@@ -492,4 +798,7 @@ module.exports = {
   deleteStudent,
   verifyStudent,
   uploadStudentDocument,
+  transferRoom,
+  getTransferHistory,
+  uploadStudentPhoto,
 };

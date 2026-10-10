@@ -117,7 +117,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
           <div className="flex items-center space-x-2 overflow-hidden">
             <HostelLogo size="sm" showText={!isCollapsed} />
             {!isCollapsed && (
-              <span className="text-[9px] uppercase font-bold tracking-wider text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-teal-200 dark:border-slate-700 shrink-0">
+              <span className="text-[9px] uppercase font-bold tracking-wider text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-blue-200 dark:border-slate-700 shrink-0">
                 {user?.role || 'Portal'}
               </span>
             )}
@@ -160,13 +160,13 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
                       title={isCollapsed ? item.label : undefined}
                       className={`group flex items-center px-3 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 ${
                         isActive
-                          ? 'bg-teal-600 text-white shadow-sm shadow-teal-500/25'
+                          ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25'
                           : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100'
                       } ${isCollapsed ? 'justify-center' : 'space-x-3'}`}
                     >
                       <Icon
                         className={`w-5 h-5 shrink-0 transition-transform group-hover:scale-110 ${
-                          isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400 group-hover:text-teal-600'
+                          isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400 group-hover:text-blue-600'
                         }`}
                       />
                       {!isCollapsed && <span className="truncate">{item.label}</span>}
@@ -185,10 +185,10 @@ const Sidebar = ({ isCollapsed, setIsCollapsed, isMobileOpen, setIsMobileOpen })
               onClick={handleInstallClick}
               className={`w-full flex items-center ${
                 isCollapsed ? 'justify-center p-2.5' : 'space-x-2.5 px-3 py-2'
-              } rounded-xl bg-teal-500/10 hover:bg-teal-500/20 text-teal-600 dark:text-teal-400 border border-teal-500/30 text-xs font-bold transition-all shadow-2xs hover:scale-102`}
+              } rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-[#2563EB] dark:text-[#06B6D4] border border-[#2563EB]/30 text-xs font-bold transition-all shadow-2xs hover:scale-102`}
               title="Install Royal Hostel Windows Desktop App"
             >
-              <MonitorDown className="w-4 h-4 shrink-0 text-teal-500" />
+              <MonitorDown className="w-4 h-4 shrink-0 text-[#2563EB] dark:text-[#06B6D4]" />
               {!isCollapsed && <span className="truncate">Install Windows App</span>}
             </button>
           </div>

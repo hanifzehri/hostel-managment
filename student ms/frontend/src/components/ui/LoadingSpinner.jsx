@@ -11,10 +11,10 @@ const LoadingSpinner = ({ text = 'Loading hostel records...', size = 'md' }) => 
     <div className="flex flex-col items-center justify-center py-16 px-4 animate-fade-in">
       <div className="relative flex items-center justify-center">
         <div
-          className={`${sizeClasses[size] || sizeClasses.md} rounded-full border-teal-500/20 border-t-teal-600 dark:border-t-teal-400 animate-spin`}
+          className={`${sizeClasses[size] || sizeClasses.md} rounded-full border-blue-500/20 border-t-blue-600 dark:border-t-cyan-400 animate-spin`}
         />
         <div
-          className="absolute w-2 h-2 rounded-full bg-teal-500 animate-ping opacity-75"
+          className="absolute w-2 h-2 rounded-full bg-cyan-400 animate-ping opacity-75"
         />
       </div>
       {text && (

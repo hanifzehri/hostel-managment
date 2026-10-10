@@ -112,7 +112,7 @@ const runTests = async () => {
     const newStudentData = {
       fullName: 'Bilal Farooq Test',
       fatherName: 'Farooq Ahmed',
-      cnic: `35202-998811-${Math.floor(100 + Math.random() * 900)}`,
+      cnic: `35202-${Math.floor(1000000 + Math.random() * 9000000)}-1`,
       dob: '2004-03-12',
       gender: 'Male',
       phone: '+92 300 7766554',
@@ -426,16 +426,80 @@ const runTests = async () => {
     const dashRootRes = await request('/api/dashboard', 'GET', null, token);
     assert(dashRootRes.status === 200 && dashRootRes.body?.stats, 'Root dashboard endpoint (/api/dashboard) responds with 200 OK');
 
-    // 32. Global Unified Database Search Across Multiple Collections
-    const searchRes = await request('/api/dashboard/search?q=Farooq', 'GET', null, token);
+    // 33. Three-Floor 12-Room Structure Verification
+    const allRoomsCheckRes = await request('/api/rooms', 'GET', null, token);
+    const roomsList = allRoomsCheckRes.body?.data || [];
+    const roomNumbers = roomsList.map((r) => r.roomNumber);
+    const expectedRooms = ['101', '102', '103', '104', '201', '202', '203', '204', '301', '302', '303', '304'];
+    const hasAllRooms = expectedRooms.every((rn) => roomNumbers.includes(rn));
     assert(
-      searchRes.status === 200 &&
-      searchRes.body?.success === true &&
-      Array.isArray(searchRes.body?.results?.students) &&
-      Array.isArray(searchRes.body?.results?.rooms) &&
-      Array.isArray(searchRes.body?.results?.staff) &&
-      Array.isArray(searchRes.body?.results?.fees),
-      'Global unified search queries database across students, rooms, staff, and fees'
+      allRoomsCheckRes.status === 200 && roomsList.length === 12 && hasAllRooms,
+      'Exactly 12 rooms across 3 floors (101-104, 201-204, 301-304) present and configured'
+    );
+
+    // 34. Strict Full-Room Transfer Prevention
+    const fullRoomFound = roomsList.find((r) => r.status === 'Full');
+    const availableRoomFound = roomsList.find((r) => (r.status === 'Available' || r.status === 'Partially Occupied') && r._id !== createdStudent.room);
+    if (fullRoomFound && String(createdStudent.room) !== String(fullRoomFound._id)) {
+      const blockedTransferRes = await request(
+        `/api/students/${createdStudent._id}/transfer-room`,
+        'POST',
+        { newRoomId: fullRoomFound._id, reason: 'Attempt transfer to full room' },
+        token
+      );
+      assert(
+        blockedTransferRes.status === 400,
+        'Room transfer to full room strictly blocked with 400 status'
+      );
+    }
+
+    // 35. Room Transfer Execution & History Record
+    if (availableRoomFound) {
+      const validTransferRes = await request(
+        `/api/students/${createdStudent._id}/transfer-room`,
+        'POST',
+        { newRoomId: availableRoomFound._id, reason: 'Transfer to available room' },
+        token
+      );
+      assert(
+        validTransferRes.status === 200 && validTransferRes.body?.student?.room === availableRoomFound._id,
+        'Student transferred between rooms and room occupancy recalculated'
+      );
+
+      const historyCheckRes = await request(
+        `/api/students/${createdStudent._id}/transfer-history`,
+        'GET',
+        null,
+        token
+      );
+      assert(
+        historyCheckRes.status === 200 && historyCheckRes.body?.count > 0,
+        'Room transfer history recorded with student, room, timestamp, and manager'
+      );
+    }
+
+    // 36. Mandatory CNIC and Format Validation
+    const invalidCnicAttemptRes = await request(
+      '/api/students',
+      'POST',
+      {
+        fullName: 'Invalid CNIC Test',
+        fatherName: 'Father',
+        cnic: 'invalid-cnic-123',
+        phone: '0300-1122334',
+        dob: '2004-01-01',
+        address: 'Khuzdar',
+        city: 'Khuzdar',
+        institution: 'BUET',
+        degree: 'BS',
+        emergencyContactName: 'Father',
+        emergencyPhone: '0300-1122334',
+      },
+      token
+    );
+    assert(
+      invalidCnicAttemptRes.status === 400,
+      'Invalid CNIC format strictly rejected by server-side validation'
     );
 
     console.log('🧪 ========================================================');

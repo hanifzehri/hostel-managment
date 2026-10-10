@@ -2,7 +2,7 @@ import React from 'react';
 
 const Button = ({
   children,
-  variant = 'primary', // primary, secondary, outline, danger, success, ghost
+  variant = 'primary', // primary, cyan, navy, secondary, outline, danger, success, ghost
   size = 'md', // sm, md, lg
   className = '',
   disabled = false,
@@ -12,7 +12,8 @@ const Button = ({
   onClick,
   ...props
 }) => {
-  const baseStyles = 'inline-flex items-center justify-center font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
+  const baseStyles =
+    'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed select-none active:scale-[0.98]';
 
   const sizeStyles = {
     sm: 'text-xs px-3 py-1.5 space-x-1.5',
@@ -22,17 +23,19 @@ const Button = ({
 
   const variantStyles = {
     primary:
-      'bg-teal-600 hover:bg-teal-700 text-white shadow-sm shadow-teal-500/20 focus:ring-teal-500',
+      'bg-blue-600 hover:bg-blue-700 text-white shadow-sm shadow-blue-500/25 focus:ring-blue-500',
+    cyan:
+      'bg-cyan-500 hover:bg-cyan-600 text-slate-950 shadow-sm shadow-cyan-500/25 focus:ring-cyan-400 font-extrabold',
     navy:
       'bg-slate-900 hover:bg-slate-800 text-white shadow-sm focus:ring-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700',
     secondary:
       'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 focus:ring-slate-400',
     outline:
-      'border border-slate-300 dark:border-slate-700 bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 focus:ring-teal-500',
+      'border border-slate-300 dark:border-slate-700 bg-transparent hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 focus:ring-blue-500',
     danger:
-      'bg-slate-900 hover:bg-slate-800 text-white border border-slate-700 focus:ring-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700',
+      'bg-red-600 hover:bg-red-700 text-white shadow-sm focus:ring-red-500',
     success:
-      'bg-teal-600 hover:bg-teal-700 text-white shadow-sm shadow-teal-500/20 focus:ring-teal-500',
+      'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-500/20 focus:ring-emerald-500',
     ghost:
       'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 focus:ring-slate-400',
   };

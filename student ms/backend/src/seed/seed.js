@@ -111,20 +111,23 @@ const seedDataInternal = async () => {
       '1. Hostel gate closes strictly at 10:00 PM.\n2. Digital resident ID card is mandatory for entry.\n3. Visitors are permitted in the reception lobby only.\n4. Smoking, drugs, and unauthorized appliances are strictly prohibited.\n5. Keep rooms clean and respect quiet hours after 10:30 PM.',
     idCardValidityMonths: 12,
     defaultMonthlyFee: 10000,
+    maxStudentCapacity: 40,
   });
 
-  console.log('[SEED] Seeding 10 Hostel Rooms across Blocks...');
+  console.log('[SEED] Seeding 12 Hostel Rooms across 3 Floors...');
   const roomConfigs = [
-    { roomNumber: '101', block: 'Block A', floor: 1, roomType: 'Single', capacity: 1, monthlyFee: 10000 },
-    { roomNumber: '102', block: 'Block A', floor: 1, roomType: 'Double', capacity: 2, monthlyFee: 10000 },
-    { roomNumber: '103', block: 'Block A', floor: 1, roomType: 'Double', capacity: 2, monthlyFee: 10000 },
-    { roomNumber: '104', block: 'Block A', floor: 1, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
-    { roomNumber: '201', block: 'Block B', floor: 2, roomType: 'Double', capacity: 2, monthlyFee: 10000 },
-    { roomNumber: '202', block: 'Block B', floor: 2, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
-    { roomNumber: '203', block: 'Block B', floor: 2, roomType: 'Four Bed', capacity: 4, monthlyFee: 10000 },
-    { roomNumber: '301', block: 'Block C', floor: 3, roomType: 'Double', capacity: 2, monthlyFee: 10000 },
-    { roomNumber: '302', block: 'Block C', floor: 3, roomType: 'Four Bed', capacity: 4, monthlyFee: 10000 },
-    { roomNumber: '303', block: 'Block C', floor: 3, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '101', block: 'Floor 1', floor: 1, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '102', block: 'Floor 1', floor: 1, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '103', block: 'Floor 1', floor: 1, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '104', block: 'Floor 1', floor: 1, roomType: 'Four Bed', capacity: 4, monthlyFee: 10000 },
+    { roomNumber: '201', block: 'Floor 2', floor: 2, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '202', block: 'Floor 2', floor: 2, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '203', block: 'Floor 2', floor: 2, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '204', block: 'Floor 2', floor: 2, roomType: 'Four Bed', capacity: 4, monthlyFee: 10000 },
+    { roomNumber: '301', block: 'Floor 3', floor: 3, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '302', block: 'Floor 3', floor: 3, roomType: 'Triple', capacity: 3, monthlyFee: 10000 },
+    { roomNumber: '303', block: 'Floor 3', floor: 3, roomType: 'Four Bed', capacity: 4, monthlyFee: 10000 },
+    { roomNumber: '304', block: 'Floor 3', floor: 3, roomType: 'Four Bed', capacity: 4, monthlyFee: 10000 },
   ];
 
   const createdRooms = [];
