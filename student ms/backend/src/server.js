@@ -56,34 +56,44 @@ app.use((req, res, next) => {
   next();
 });
 
-// Middleware
+// Middleware & CORS configuration
 const defaultOrigins = [
   'https://hostel-managment-khuzdar.vercel.app',
-  'https://backend-d1ht.onrender.com',
   'http://localhost:5173',
-  'http://localhost:5000',
+  'http://localhost:3000',
   'http://127.0.0.1:5173',
-  'http://127.0.0.1:5000',
 ];
-const configuredOrigins = (process.env.FRONTEND_URL || '')
+
+const envOrigins = (process.env.FRONTEND_URL || '')
   .split(',')
-  .map((value) => value.trim())
+  .map((value) => value.trim().replace(/\/+$/, ''))
   .filter(Boolean);
-const allowedOrigins = new Set([...defaultOrigins, ...configuredOrigins]);
+
+const allowedOriginsList = [...defaultOrigins.map((v) => v.replace(/\/+$/, '')), ...envOrigins];
 
 app.use(cors({
   origin(origin, callback) {
-    // Allow server-to-server and local tooling requests without an Origin header.
+    // Allow server-to-server, mobile app, health check or curl requests without Origin header
     if (!origin) return callback(null, true);
-    if (allowedOrigins.has(origin)) return callback(null, true);
-    if (origin.endsWith('.vercel.app')) return callback(null, true);
-    if (process.env.NODE_ENV !== 'production') return callback(null, true);
-    return callback(new Error('Origin is not allowed by CORS policy'));
+
+    const cleanOrigin = origin.replace(/\/+$/, '');
+    const isAllowed = allowedOriginsList.some((allowed) => allowed === cleanOrigin) ||
+      cleanOrigin.endsWith('.vercel.app') ||
+      cleanOrigin.endsWith('.onrender.com') ||
+      cleanOrigin.includes('localhost') ||
+      cleanOrigin.includes('127.0.0.1');
+
+    if (isAllowed) {
+      return callback(null, true);
+    }
+    return callback(new Error(`Origin ${origin} is not allowed by CORS policy`));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200,
 }));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -136,6 +146,19 @@ app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/activity-logs', require('./routes/auditRoutes'));
 app.use('/api/settings', require('./routes/settingRoutes'));
 app.use('/api/uploads', require('./routes/uploadRoutes'));
+
+// Root endpoint
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Hostel Management System API is live and operational 🚀',
+    version: '1.0.0',
+    status: 'online',
+    frontend: 'https://hostel-managment-khuzdar.vercel.app',
+    healthCheck: '/api/health',
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
